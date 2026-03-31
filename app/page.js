@@ -145,7 +145,7 @@ export default function Home() {
  
         {/* STEP 0 — Demandante */}
         {step === 0 && (
-          <div>
+          <div style={{ background: "#ffffff", border: `2px solid ${C.border}`, borderRadius: 12, padding: 28, boxShadow: `0 4px 20px rgba(168,85,247,0.1)` }}>
             <SectionTitle color={C}>Datos del Demandante</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Razón Social / Nombre completo" k="empresa" full />
@@ -161,7 +161,7 @@ export default function Home() {
  
         {/* STEP 1 — Abogado */}
         {step === 1 && (
-          <div>
+          <div style={{ background: "#ffffff", border: `2px solid ${C.border}`, borderRadius: 12, padding: 28, boxShadow: `0 4px 20px rgba(168,85,247,0.1)` }}>
             <SectionTitle color={C}>Datos del Abogado Patrocinante</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Nombre Abogado" k="abogado" />
@@ -180,7 +180,7 @@ export default function Home() {
  
         {/* STEP 2 — Folios */}
         {step === 2 && (
-          <div>
+          <div style={{ background: "#ffffff", border: `2px solid ${C.border}`, borderRadius: 12, padding: 28, boxShadow: `0 4px 20px rgba(168,85,247,0.1)` }}>
             <SectionTitle color={C}>Folios del Certificado de Deuda</SectionTitle>
             <div style={{ overflowX: "auto", marginBottom: 16 }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
@@ -236,7 +236,7 @@ export default function Home() {
  
         {/* STEP 3 — Vista Previa */}
         {step === 3 && (
-          <div>
+          <div style={{ background: "#ffffff", border: `2px solid ${C.border}`, borderRadius: 12, padding: 28, boxShadow: `0 4px 20px rgba(168,85,247,0.1)` }}>
             <SectionTitle color={C}>Vista Previa — Resumen de la Demanda</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 24 }}>
               <Card color={C} label="Demandante" value={form.empresa} sub={`RUT ${form.rutEmpresa}`} />
@@ -275,8 +275,8 @@ export default function Home() {
 }
  
 const SectionTitle = ({ children, color: C }) => (
-  <div style={{ borderLeft: `3px solid ${C.record}`, paddingLeft: 12, marginBottom: 20 }}>
-    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: C.muted, textTransform: "uppercase" }}>{children}</div>
+  <div style={{ borderLeft: `4px solid ${C.record}`, paddingLeft: 14, marginBottom: 24, paddingTop: 4, paddingBottom: 4 }}>
+    <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: 1, color: C.record, textTransform: "uppercase" }}>{children}</div>
   </div>
 );
  
