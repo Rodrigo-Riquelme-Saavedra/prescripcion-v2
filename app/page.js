@@ -97,7 +97,7 @@ export default function Home() {
         {label}
       </div>
       <input
-        style={{ width: "100%", background: C.bg, border: `1px solid ${C.dim}`, borderRadius: 6, padding: "9px 12px", color: C.text, fontFamily: "inherit", fontSize: 13, boxSizing: "border-box", outline: "none", transition: "border 0.2s" }}
+        style={{ width: "100%", background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: 6, padding: "9px 12px", color: C.text, fontFamily: "inherit", fontSize: 13, boxSizing: "border-box", outline: "none", transition: "border 0.2s" }}
         value={form[k]}
         onChange={(e) => set(k, e.target.value)}
         placeholder={placeholder || ""}
@@ -204,7 +204,7 @@ export default function Home() {
                       ].map(({ k, w, align }) => (
                         <td key={k} style={{ padding: "4px 4px" }}>
                           <input value={f[k]} onChange={(e) => updateFolio(i, k, e.target.value)}
-                            style={{ width: w, background: C.surface, border: `1px solid ${C.dim}`, borderRadius: 4, color: C.text, fontFamily: "inherit", fontSize: 12, padding: "4px 6px", textAlign: align }} />
+                            style={{ width: w, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontFamily: "inherit", fontSize: 12, padding: "4px 6px", textAlign: align }} />
                         </td>
                       ))}
                       <td style={{ padding: "4px 8px", color: C.accent, fontWeight: 700, whiteSpace: "nowrap", textAlign: "right" }}>
