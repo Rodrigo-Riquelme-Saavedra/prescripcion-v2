@@ -113,9 +113,10 @@ export default function Home() {
       {/* Header */}
       <div style={{ background: "linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%)", borderBottom: `3px solid ${C.record}`, padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18, boxShadow: "0 4px 24px rgba(191,0,255,0.15)" }}>
         <img
-          src="/Public/PaginaWeb.png"
+          src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png"
           alt="Grupo GV Logo"
           style={{ height: 54, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(100,180,255,0.6))", flexShrink: 0 }}
+          onError={(e) => { e.target.style.display = "none"; }}
         />
         <div style={{ width: 1, height: 36, background: `linear-gradient(to bottom, transparent, ${C.record}, transparent)` }} />
         <div>
