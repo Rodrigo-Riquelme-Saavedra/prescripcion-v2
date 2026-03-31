@@ -111,14 +111,21 @@ export default function Home() {
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
  
       {/* Header */}
-      <div style={{ background: C.surface, borderBottom: `2px solid ${C.record}`, padding: "0 32px", height: 58, display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 32, height: 32, background: `linear-gradient(135deg, ${C.record}, ${C.accent})`, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, flexShrink: 0 }}>⚖</div>
+      <div style={{ background: "linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%)", borderBottom: `3px solid ${C.record}`, padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18, boxShadow: "0 4px 24px rgba(191,0,255,0.15)" }}>
+        <img
+          src="/Public/PaginaWeb.png"
+          alt="Grupo GV Logo"
+          style={{ height: 54, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(100,180,255,0.6))", flexShrink: 0 }}
+        />
+        <div style={{ width: 1, height: 36, background: `linear-gradient(to bottom, transparent, ${C.record}, transparent)` }} />
         <div>
-          <div style={{ fontWeight: 700, fontSize: 13, letterSpacing: 2, color: C.text }}>SISTEMA PRESCRIPCIÓN TRIBUTARIA</div>
-          <div style={{ fontSize: 10, color: C.muted, letterSpacing: 1 }}>Chile · Art. 201 Código Tributario</div>
+          <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: 2, color: "#ffffff", textShadow: `0 0 20px ${C.record}` }}>SISTEMA PRESCRIPCIÓN TRIBUTARIA</div>
+          <div style={{ fontSize: 10, color: C.accent, letterSpacing: 1.5, marginTop: 2 }}>Chile · Art. 201 Código Tributario · Grupo GV</div>
         </div>
-        <div style={{ marginLeft: "auto", background: C.dim, borderRadius: 20, padding: "3px 12px", fontSize: 10, color: C.accent, fontWeight: 700, letterSpacing: 1 }}>
-          ● EN LÍNEA
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ background: "rgba(191,0,255,0.15)", border: `1px solid ${C.record}`, borderRadius: 20, padding: "4px 14px", fontSize: 10, color: C.accent, fontWeight: 700, letterSpacing: 1 }}>
+            ● EN LÍNEA
+          </div>
         </div>
       </div>
  
