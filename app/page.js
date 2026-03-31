@@ -13,17 +13,17 @@ const STEPS = ["1. Demandante", "2. Abogado", "3. Folios", "4. Vista Previa"];
  
 // F1 Purple palette
 const C = {
-  bg:       "#1a0a2e",   // fondo principal oscuro púrpura
-  surface:  "#2d1b4e",   // superficie de cards
-  border:   "#6b21a8",   // borde púrpura F1
+  bg:       "#f0f0f5",   // fondo principal oscuro púrpura
+  surface:  "#ffffff",   // superficie de cards
+  border:   "#c084fc",   // borde púrpura F1
   accent:   "#a855f7",   // púrpura brillante (acento)
   record:   "#bf00ff",   // morado récord F1 puro
-  text:     "#f3e8ff",   // texto claro lavanda
-  muted:    "#9d7ec9",   // texto secundario
-  dim:      "#4c1d95",   // elementos apagados
+  text:     "#1e1b2e",   // texto claro lavanda
+  muted:    "#6b21a8",   // texto secundario
+  dim:      "#e9e4f5",   // elementos apagados
   green:    "#22c55e",   // éxito
   red:      "#ef4444",   // error
-  rowHover: "#3b0764",   // hover filas
+  rowHover: "#f3e8ff",   // hover filas
 };
  
 const STEPS_CONFIG = STEPS;
