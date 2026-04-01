@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import MutuoModule from "./MutuoModule";
  
 const C = {
   bg:      "#f0f0f5",
@@ -95,7 +96,7 @@ export default function Home() {
   }
  
   if (currentModule === "mutuo-vista" || currentModule === "mutuo-prestacion") {
-    return <ComingSoonModule id={currentModule} onBack={() => setCurrentModule(null)} />;
+    return <MutuoModule onBack={() => setCurrentModule(null)} />;
   }
  
   return (
