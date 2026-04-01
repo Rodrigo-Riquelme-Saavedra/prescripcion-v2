@@ -12,7 +12,8 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "docx": "^9.5.3"
+    "docx": "^9.5.3",
+    "@anthropic-ai/sdk": "^0.39.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
