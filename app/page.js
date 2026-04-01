@@ -335,41 +335,18 @@ function Prescripcion({ onBack }) {
     setExtracting(true);
     setExtractError("");
     try {
-      const base64 = await new Promise((res, rej) => {
-        const reader = new FileReader();
-        reader.onload = () => res(reader.result.split(",")[1]);
-        reader.onerror = rej;
-        reader.readAsDataURL(file);
-      });
-      const isPdf = file.name.toLowerCase().endsWith(".pdf");
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/extraer-folios", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 2000,
-          messages: [{
-            role: "user",
-            content: [
-              isPdf
-                ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64 } }
-                : { type: "text", text: "El archivo es un Excel con datos de folios de deuda TGR." },
-              { type: "text", text: `Extrae TODOS los folios de deuda de este certificado TGR. 
-Responde ÚNICAMENTE con un JSON array, sin texto adicional, sin bloques de código, solo el JSON puro.
-Formato exacto: [{"folio":"123","fechaVcto":"12-Jul-2016","deudaNeta":1000,"reajuste":500,"interes":300,"multa":0,"total":1800}]
-Si la fecha es 00-00-0000 mantenla así. Los números deben ser numéricos sin puntos ni comas.` }
-            ]
-          }]
-        })
+        body: formData,
       });
       const data = await response.json();
-      const text = data.content?.[0]?.text || "";
-      const clean = text.replace(/```json|```/g, "").trim();
-      const extracted = JSON.parse(clean);
-      if (!Array.isArray(extracted) || extracted.length === 0) throw new Error("No se encontraron folios");
-      setFolios(extracted);
+      if (!response.ok) throw new Error(data.error || "Error desconocido");
+      if (!Array.isArray(data.folios) || data.folios.length === 0) throw new Error("No se encontraron folios");
+      setFolios(data.folios);
     } catch (err) {
-      setExtractError("No se pudieron extraer los folios. Verifica que el archivo sea un Certificado de Deuda TGR válido.");
+      setExtractError(err.message || "No se pudieron extraer los folios. Verifica que el archivo sea un Certificado de Deuda TGR válido.");
     } finally {
       setExtracting(false);
     }
