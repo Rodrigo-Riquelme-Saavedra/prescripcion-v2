@@ -318,22 +318,62 @@ function Prescripcion({ onBack }) {
     fechaCertificado: "15-12-2025",
     expedientes: "",
   });
-  const [folios, setFolios] = useState(FOLIOS_EJEMPLO);
+  const [folios, setFolios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [extracting, setExtracting] = useState(false);
+  const [extractError, setExtractError] = useState("");
+  const [fileName, setFileName] = useState("");
  
   const totalDeuda = folios.reduce((s, f) => s + (parseFloat(f.total) || 0), 0);
   const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
  
-  const addFolio = () => setFolios((p) => [...p, { folio: "", fechaVcto: "", deudaNeta: 0, reajuste: 0, interes: 0, multa: 0, total: 0 }]);
-  const removeFolio = (i) => setFolios((p) => p.filter((_, idx) => idx !== i));
-  const updateFolio = (i, k, v) => setFolios((p) => {
-    const next = [...p];
-    next[i] = { ...next[i], [k]: v };
-    const r = next[i];
-    next[i].total = (parseFloat(r.deudaNeta)||0)+(parseFloat(r.reajuste)||0)+(parseFloat(r.interes)||0)+(parseFloat(r.multa)||0);
-    return next;
-  });
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setFileName(file.name);
+    setExtracting(true);
+    setExtractError("");
+    try {
+      const base64 = await new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = () => res(reader.result.split(",")[1]);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+      });
+      const isPdf = file.name.toLowerCase().endsWith(".pdf");
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 2000,
+          messages: [{
+            role: "user",
+            content: [
+              isPdf
+                ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: base64 } }
+                : { type: "text", text: "El archivo es un Excel con datos de folios de deuda TGR." },
+              { type: "text", text: `Extrae TODOS los folios de deuda de este certificado TGR. 
+Responde ÚNICAMENTE con un JSON array, sin texto adicional, sin bloques de código, solo el JSON puro.
+Formato exacto: [{"folio":"123","fechaVcto":"12-Jul-2016","deudaNeta":1000,"reajuste":500,"interes":300,"multa":0,"total":1800}]
+Si la fecha es 00-00-0000 mantenla así. Los números deben ser numéricos sin puntos ni comas.` }
+            ]
+          }]
+        })
+      });
+      const data = await response.json();
+      const text = data.content?.[0]?.text || "";
+      const clean = text.replace(/```json|```/g, "").trim();
+      const extracted = JSON.parse(clean);
+      if (!Array.isArray(extracted) || extracted.length === 0) throw new Error("No se encontraron folios");
+      setFolios(extracted);
+    } catch (err) {
+      setExtractError("No se pudieron extraer los folios. Verifica que el archivo sea un Certificado de Deuda TGR válido.");
+    } finally {
+      setExtracting(false);
+    }
+  };
  
   const handleGenerar = async () => {
     setLoading(true); setError("");
@@ -421,42 +461,95 @@ function Prescripcion({ onBack }) {
         {/* STEP 2 */}
         {step === 2 && (
           <div style={{ background: C.surface, border: `2px solid ${C.border}`, borderRadius: 12, padding: 28, boxShadow: "0 4px 20px rgba(168,85,247,0.1)" }}>
-            <SectionTitle>Folios del Certificado de Deuda</SectionTitle>
-            <div style={{ overflowX: "auto", marginBottom: 16 }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-                <thead>
-                  <tr style={{ background: "#e9e4f5" }}>
-                    {["Folio", "Fecha Vcto.", "Deuda Neta $", "Reajuste $", "Interés $", "Multa $", "Total $", ""].map((h) => (
-                      <th key={h} style={{ padding: "8px", color: C.muted, fontSize: 10, letterSpacing: 1, fontWeight: 700, borderBottom: `1px solid ${C.border}`, textAlign: "right" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {folios.map((f, i) => (
-                    <tr key={i} style={{ borderBottom: `1px solid ${C.dim}` }}>
-                      {[{k:"folio",w:80,a:"left"},{k:"fechaVcto",w:100,a:"left"},{k:"deudaNeta",w:90,a:"right"},{k:"reajuste",w:80,a:"right"},{k:"interes",w:80,a:"right"},{k:"multa",w:80,a:"right"}].map(({k,w,a}) => (
-                        <td key={k} style={{ padding: "4px" }}>
-                          <input value={f[k]} onChange={(e) => updateFolio(i, k, e.target.value)}
-                            style={{ width: w, background: "#f8f6ff", border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontFamily: "inherit", fontSize: 12, padding: "4px 6px", textAlign: a }} />
-                        </td>
-                      ))}
-                      <td style={{ padding: "4px 8px", color: C.accent, fontWeight: 700, textAlign: "right" }}>$ {fmt(f.total)}</td>
-                      <td><button onClick={() => removeFolio(i)} style={{ background: "none", border: "none", color: C.red, cursor: "pointer", fontSize: 18 }}>×</button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-              <button onClick={addFolio} style={{ background: C.dim, border: `1px dashed ${C.border}`, color: C.accent, borderRadius: 6, padding: "8px 16px", fontFamily: "inherit", fontSize: 12, cursor: "pointer" }}>+ Agregar Folio</button>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: 10, color: C.muted, marginBottom: 2 }}>TOTAL DEUDA MOROSA</div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: C.record }}>$ {fmt(totalDeuda)}</div>
+            <SectionTitle>Certificado de Deuda — Carga de Folios</SectionTitle>
+ 
+            {/* Upload area */}
+            {!extracting && folios.length === 0 && (
+              <div>
+                <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.7 }}>
+                  Sube el <strong>Certificado de Deuda emitido por la TGR</strong> (PDF o Excel). 
+                  El sistema extraerá automáticamente todos los folios, fechas y montos.
+                </p>
+                <label style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: `2px dashed ${C.border}`, borderRadius: 12, padding: "40px 24px", cursor: "pointer", background: C.dim, transition: "all 0.2s" }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>📄</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: C.muted, marginBottom: 6 }}>Arrastra aquí o haz clic para subir</div>
+                  <div style={{ fontSize: 11, color: C.accent }}>Certificado TGR en formato PDF o Excel (.xlsx)</div>
+                  <input type="file" accept=".pdf,.xlsx,.xls" onChange={handleFileUpload} style={{ display: "none" }} />
+                </label>
+                {extractError && (
+                  <div style={{ marginTop: 16, background: "#fef2f2", border: `1px solid ${C.red}`, borderRadius: 8, padding: "12px 16px", color: C.red, fontSize: 12 }}>
+                    ⚠ {extractError}
+                  </div>
+                )}
               </div>
-            </div>
-            <div style={{ display: "flex", gap: 10 }}>
+            )}
+ 
+            {/* Extracting loader */}
+            {extracting && (
+              <div style={{ textAlign: "center", padding: "48px 0" }}>
+                <div style={{ fontSize: 48, marginBottom: 16 }}>🤖</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Analizando certificado...</div>
+                <div style={{ fontSize: 12, color: C.accent }}>La IA está extrayendo los folios y montos del documento</div>
+                <div style={{ marginTop: 20, height: 4, background: C.dim, borderRadius: 2, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: "60%", background: `linear-gradient(to right, ${C.record}, ${C.accent})`, borderRadius: 2, animation: "none" }} />
+                </div>
+              </div>
+            )}
+ 
+            {/* Extracted folios table */}
+            {!extracting && folios.length > 0 && (
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, padding: "10px 16px" }}>
+                  <span style={{ fontSize: 18 }}>✅</span>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#166534" }}>Certificado procesado correctamente</div>
+                    <div style={{ fontSize: 11, color: "#166534" }}>{folios.length} folios extraídos · Archivo: {fileName}</div>
+                  </div>
+                  <button onClick={() => { setFolios([]); setFileName(""); setExtractError(""); }} 
+                    style={{ marginLeft: "auto", background: "none", border: "1px solid #86efac", borderRadius: 6, padding: "4px 10px", fontSize: 11, color: "#166534", cursor: "pointer", fontFamily: "inherit" }}>
+                    Cambiar archivo
+                  </button>
+                </div>
+ 
+                <div style={{ overflowX: "auto", marginBottom: 16 }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                    <thead>
+                      <tr style={{ background: "#e9e4f5" }}>
+                        {["Folio", "Fecha Vcto.", "Deuda Neta $", "Reajuste $", "Interés $", "Multa $", "Total $"].map((h) => (
+                          <th key={h} style={{ padding: "8px", color: C.muted, fontSize: 10, letterSpacing: 1, fontWeight: 700, borderBottom: `1px solid ${C.border}`, textAlign: "right" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {folios.map((f, i) => (
+                        <tr key={i} style={{ borderBottom: `1px solid ${C.dim}`, background: i % 2 === 0 ? "#fff" : "#faf8ff" }}>
+                          <td style={{ padding: "6px 8px", textAlign: "left", fontWeight: 600 }}>{f.folio}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "left" }}>{f.fechaVcto}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "right" }}>$ {fmt(f.deudaNeta)}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "right" }}>$ {fmt(f.reajuste)}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "right" }}>$ {fmt(f.interes)}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "right" }}>$ {fmt(f.multa)}</td>
+                          <td style={{ padding: "6px 8px", textAlign: "right", color: C.accent, fontWeight: 700 }}>$ {fmt(f.total)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr style={{ background: "#e9e4f5", fontWeight: 700 }}>
+                        <td colSpan={6} style={{ padding: "8px", textAlign: "right", color: C.muted }}>TOTAL DEUDA MOROSA</td>
+                        <td style={{ padding: "8px", textAlign: "right", color: C.record, fontSize: 14 }}>$ {fmt(totalDeuda)}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            )}
+ 
+            <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
               <BtnSecondary onClick={() => setStep(1)}>← Volver</BtnSecondary>
-              <Btn onClick={() => setStep(3)}>Vista Previa →</Btn>
+              <button onClick={() => setStep(3)} disabled={folios.length === 0}
+                style={{ flex: 1, background: folios.length === 0 ? C.dim : `linear-gradient(135deg, ${C.record}, ${C.accent})`, border: "none", color: folios.length === 0 ? C.muted : "#fff", borderRadius: 6, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: folios.length === 0 ? "default" : "pointer" }}>
+                {folios.length === 0 ? "Sube el certificado para continuar" : "Vista Previa →"}
+              </button>
             </div>
           </div>
         )}
@@ -474,12 +567,70 @@ function Prescripcion({ onBack }) {
                 </div>
               ))}
             </div>
-            <div style={{ background: C.dim, border: `1px solid ${C.border}`, borderRadius: 8, padding: 20, fontSize: 12, lineHeight: 2, marginBottom: 20, maxHeight: 280, overflowY: "auto" }}>
-              <p style={{ textAlign: "center", fontWeight: 700, color: C.record, marginBottom: 12 }}>DEMANDA DE DECLARACIÓN DE PRESCRIPCIÓN EXTINTIVA</p>
-              <p><strong>{form.empresa}</strong>, RUT <strong>{form.rutEmpresa}</strong>, representada por <strong>{form.representante}</strong>, {form.cargoRepresentante}, RUT <strong>{form.rutRepresentante}</strong>, domiciliados en {form.domicilioEmpresa}.</p>
-              <p style={{ marginTop: 8 }}>Certificado de Deuda: <strong>{form.fechaCertificado}</strong> · Folios: <strong>{folios.map(f=>f.folio).filter(Boolean).join(", ")}</strong></p>
-              <p style={{ marginTop: 8 }}>Total: <strong style={{ color: C.record }}>$ {fmt(totalDeuda)}</strong></p>
-              <p style={{ marginTop: 8, color: C.muted, fontStyle: "italic" }}>[... texto legal completo según plantilla ...]</p>
+            <div style={{ background: "#faf8ff", border: `1px solid ${C.border}`, borderRadius: 8, padding: "24px 28px", fontSize: 12, lineHeight: 2, marginBottom: 20, maxHeight: 500, overflowY: "auto", fontFamily: "Georgia, serif", color: "#1a1a2e" }}>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 4, fontSize: 13, letterSpacing: 1 }}>EN LO PRINCIPAL: DEMANDA DE DECLARACIÓN DE PRESCRIPCIÓN EXTINTIVA;</p>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 20, fontSize: 13 }}>PRIMER OTROSÍ: ACOMPAÑA DOCUMENTO; SEGUNDO OTROSÍ: PATROCINIO Y PODER.</p>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 20 }}>S. J. L.</p>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                <strong>{form.empresa}</strong>, sociedad del giro de su denominación, rol único tributario n° <strong>{form.rutEmpresa}</strong>, representada legalmente por don <strong>{form.representante}</strong>, {form.cargoRepresentante}, cédula de identidad n° <strong>{form.rutRepresentante}</strong>, ambos domiciliados en {form.domicilioEmpresa}, a S.S., respetuosamente digo:
+              </p>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                Que vengo en demandar al <strong>FISCO – TESORERÍA GENERAL DE LA REPÚBLICA</strong>, rol único tributario n° 60.805.000-0, representado por don <strong>Hernán Nobizelli Reyes</strong>, cédula de identidad n° 12.242.809-5, ambos domiciliados en calle Teatinos N° 28, segundo piso, Santiago, con el objeto que se declare la <strong>PRESCRIPCIÓN EXTINTIVA</strong> de la acción de cobro de impuestos, reajustes, intereses moratorios y multas, correspondientes a los folios que se detallan a continuación, todos según Certificado de Deuda de fecha <strong>{form.fechaCertificado}</strong>, el que se acompaña junto a esta presentación:
+              </p>
+ 
+              <div style={{ overflowX: "auto", marginBottom: 16 }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+                  <thead>
+                    <tr style={{ background: "#e9e4f5" }}>
+                      {["Formulario/Folio","Fecha Vcto.","Deuda Neta","Reajuste","Interés","Multa","Total"].map(h => (
+                        <th key={h} style={{ padding: "6px 8px", border: "1px solid #ccc", fontSize: 10, fontWeight: 700, textAlign: "right" }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {folios.map((f, i) => (
+                      <tr key={i} style={{ background: i%2===0?"#fff":"#faf8ff" }}>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "left" }}>{f.folio}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right" }}>{f.fechaVcto}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right" }}>$ {fmt(f.deudaNeta)}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right" }}>$ {fmt(f.reajuste)}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right" }}>$ {fmt(f.interes)}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right" }}>$ {fmt(f.multa)}</td>
+                        <td style={{ padding: "5px 8px", border: "1px solid #eee", textAlign: "right", fontWeight: 700 }}>$ {fmt(f.total)}</td>
+                      </tr>
+                    ))}
+                    <tr style={{ background: "#e9e4f5", fontWeight: 700 }}>
+                      <td colSpan={6} style={{ padding: "6px 8px", border: "1px solid #ccc", textAlign: "right" }}>TOTAL DEUDA MOROSA (CLP)</td>
+                      <td style={{ padding: "6px 8px", border: "1px solid #ccc", textAlign: "right", color: "#bf00ff" }}>$ {fmt(totalDeuda)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                En dicho certificado se detallan los folios indicados, que totalizan la suma de <strong>$ {fmt(totalDeuda)}</strong>, a la fecha del Certificado de Deuda indicado.
+              </p>
+ 
+              <p style={{ fontWeight: 700, marginBottom: 8 }}>EL DERECHO</p>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                De acuerdo a lo dispuesto en el artículo 169 y siguientes del Código Tributario, el Fisco de Chile, a través de la demandada, La Tesorería General de la República, ha requerido de pago, a través de diversos expedientes administrativos{form.expedientes ? ` Rol N° ${form.expedientes},` : ","} todos de la comuna de Santiago. Han transcurrido más de 7 años en la mayoría de los folios indicados, ya que esas deudas corresponden a los años 2016, 2017 y 2018, cuestión que entra en controversia con la Ley, la Jurisprudencia de la Excma. Corte Suprema y la lógica.
+              </p>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                La Excma. Corte Suprema ha resuelto esta problemática estableciendo un plazo máximo de tres años para el cobro de la deuda por parte del Servicio de Tesorerías, confirmado en sentencias Rol N° 1976-2008 de 30 de noviembre de 2009, Rol N° 1205-2010 de 25 de mayo de 2012 y Rol N° 516-2011 de 12 de junio de 2012.
+              </p>
+ 
+              <p style={{ fontWeight: 700, marginBottom: 8 }}>POR TANTO,</p>
+ 
+              <p style={{ marginBottom: 16, textAlign: "justify" }}>
+                En mérito de lo expuesto, Ruego a S.S., se sirva tener por interpuesta demanda en juicio ordinario en contra del <strong>FISCO – TESORERÍA GENERAL DE LA REPÚBLICA</strong>, declarando la <strong>PRESCRIPCIÓN EXTINTIVA DE LA ACCIÓN DE COBRO</strong> de obligaciones tributarias cuyos folios fueron señalados, por una deuda total de <strong>$ {fmt(totalDeuda)}</strong>, todo con expresa condena en costas.
+              </p>
+ 
+              <p style={{ marginBottom: 8 }}><strong>PRIMER OTROSÍ:</strong> Vengo en acompañar Certificado de deuda emitido por la TGR del {form.fechaCertificado} y copia de inscripción Notarial.</p>
+              <p><strong>SEGUNDO OTROSÍ:</strong> Patrocinio y poder al abogado don <strong>{form.abogado}</strong>, RUT {form.rutAbogado}, domiciliado {form.domicilioAbogado}, casilla {form.emailAbogado}.</p>
             </div>
             {error && <div style={{ background: "#fef2f2", border: `1px solid ${C.red}`, borderRadius: 6, padding: "10px 16px", color: C.red, fontSize: 12, marginBottom: 14 }}>⚠ {error}</div>}
             <div style={{ display: "flex", gap: 10 }}>
