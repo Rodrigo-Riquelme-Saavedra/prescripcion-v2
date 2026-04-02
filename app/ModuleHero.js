@@ -1,20 +1,20 @@
 "use client";
  
-const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.12">
-  <line x1="400" y1="60" x2="400" y2="280" stroke="#e8eaf0" stroke-width="4"/>
-  <rect x="388" y="270" width="24" height="60" fill="#c8ccd8" rx="2"/>
-  <rect x="340" y="320" width="120" height="10" fill="#e8eaf0" rx="2"/>
-  <rect x="310" y="330" width="180" height="8" fill="#c8ccd8" rx="2"/>
-  <line x1="200" y1="110" x2="600" y2="110" stroke="#e8eaf0" stroke-width="3"/>
-  <rect x="396" y="56" width="8" height="8" fill="#c9a84c" rx="1"/>
-  <line x1="200" y1="110" x2="180" y2="200" stroke="#c8ccd8" stroke-width="2"/>
-  <line x1="600" y1="110" x2="620" y2="200" stroke="#c8ccd8" stroke-width="2"/>
-  <ellipse cx="180" cy="220" rx="70" ry="25" fill="none" stroke="#e8eaf0" stroke-width="2"/>
-  <path d="M 110 200 Q 180 180 250 200" fill="none" stroke="#e8eaf0" stroke-width="2"/>
-  <ellipse cx="620" cy="225" rx="70" ry="25" fill="none" stroke="#b52240" stroke-width="2"/>
-  <path d="M 550 205 Q 620 185 690 205" fill="none" stroke="#b52240" stroke-width="2"/>
-  <circle cx="400" cy="108" r="10" fill="#c9a84c"/>
-  <rect x="385" y="50" width="30" height="12" fill="#c9a84c" rx="1"/>
+const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.35">
+  <line x1="400" y1="60" x2="400" y2="280" stroke="#ffffff" stroke-width="5"/>
+  <rect x="388" y="270" width="24" height="60" fill="#dddddd" rx="2"/>
+  <rect x="340" y="320" width="120" height="10" fill="#ffffff" rx="2"/>
+  <rect x="310" y="330" width="180" height="8" fill="#dddddd" rx="2"/>
+  <line x1="200" y1="110" x2="600" y2="110" stroke="#ffffff" stroke-width="3"/>
+  <rect x="396" y="56" width="8" height="8" fill="#f0c060" rx="1"/>
+  <line x1="200" y1="110" x2="180" y2="200" stroke="#cccccc" stroke-width="2.5"/>
+  <line x1="600" y1="110" x2="620" y2="200" stroke="#cccccc" stroke-width="2.5"/>
+  <ellipse cx="180" cy="220" rx="70" ry="25" fill="none" stroke="#dddddd" stroke-width="2.5"/>
+  <path d="M 110 200 Q 180 180 250 200" fill="none" stroke="#dddddd" stroke-width="2.5"/>
+  <ellipse cx="620" cy="225" rx="70" ry="25" fill="none" stroke="#e05070" stroke-width="2.5"/>
+  <path d="M 550 205 Q 620 185 690 205" fill="none" stroke="#e05070" stroke-width="2.5"/>
+  <circle cx="400" cy="108" r="10" fill="#f0c060"/>
+  <rect x="385" y="50" width="30" height="12" fill="#f0c060" rx="1"/>
 </svg>`;
  
 export default function ModuleHero({ title, subtitle, onBack }) {
