@@ -1,6 +1,6 @@
 "use client";
  
-const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.35">
+const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
   <line x1="400" y1="60" x2="400" y2="280" stroke="#ffffff" stroke-width="5"/>
   <rect x="388" y="270" width="24" height="60" fill="#dddddd" rx="2"/>
   <rect x="340" y="320" width="120" height="10" fill="#ffffff" rx="2"/>
