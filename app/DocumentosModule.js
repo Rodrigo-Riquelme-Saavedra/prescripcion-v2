@@ -1,6 +1,3 @@
-mentosmodule · JS
-Copiar
-
 "use client";
 import { useState } from "react";
 import MandatosModule from "./MandatosModule";
