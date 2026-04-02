@@ -288,7 +288,7 @@ function Prescripcion({ onBack }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%)", borderBottom: `3px solid ${C.record}`, padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18, boxShadow: "0 4px 24px rgba(191,0,255,0.15)" }}>
+      <div style={{ background: "#1e1e1e", borderBottom: "3px solid #8b1a2e", padding: "0 32px", height: 70, display: "flex", alignItems: "center", gap: 18, boxShadow: "0 4px 24px rgba(191,0,255,0.15)" }}>
         <img src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png" alt="Grupo GV" style={{ height: 54, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(100,180,255,0.6))", flexShrink: 0 }} onError={(e) => { e.target.style.display = "none"; }} />
         <div style={{ width: 1, height: 36, background: `linear-gradient(to bottom, transparent, ${C.record}, transparent)` }} />
         <div>
@@ -305,7 +305,7 @@ function Prescripcion({ onBack }) {
         <div style={{ display: "flex", marginBottom: 32, border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden" }}>
           {STEPS.map((s, i) => (
             <button key={s} onClick={() => i <= step && setStep(i)}
-              style={{ flex: 1, padding: "11px 0", background: i === step ? C.record : i < step ? "#e9e4f5" : C.surface, border: "none", borderRight: i < 3 ? `1px solid ${C.border}` : "none", color: i === step ? "#fff" : i < step ? C.accent : C.muted, fontFamily: "inherit", fontSize: 11, fontWeight: 700, letterSpacing: 1, cursor: i <= step ? "pointer" : "default", transition: "all 0.2s" }}>
+              style={{ flex: 1, padding: "11px 0", background: i === step ? C.record : i < step ? "#e9e4f5" : C.surface, border: "none", borderRight: i < 3 ? `1px solid ${C.border}` : "none", color: i === step ? "#fff" : i < step ? "#8b1a2e" : "#888", fontFamily: "inherit", fontSize: 11, fontWeight: 700, letterSpacing: 1, cursor: i <= step ? "pointer" : "default", transition: "all 0.2s" }}>
               {i < step ? "✓ " : ""}{s}
             </button>
           ))}
@@ -435,7 +435,7 @@ function Prescripcion({ onBack }) {
             <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
               <BtnSecondary onClick={() => setStep(1)}>← Volver</BtnSecondary>
               <button onClick={() => setStep(3)} disabled={folios.length === 0}
-                style={{ flex: 1, background: folios.length === 0 ? C.dim : `linear-gradient(135deg, ${C.record}, ${C.accent})`, border: "none", color: folios.length === 0 ? C.muted : "#fff", borderRadius: 6, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: folios.length === 0 ? "default" : "pointer" }}>
+                style={{ flex: 1, background: folios.length === 0 ? C.dim : "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: folios.length === 0 ? C.muted : "#fff", borderRadius: 6, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: folios.length === 0 ? "default" : "pointer" }}>
                 {folios.length === 0 ? "Sube el certificado para continuar" : "Vista Previa →"}
               </button>
             </div>
@@ -524,7 +524,7 @@ function Prescripcion({ onBack }) {
             <div style={{ display: "flex", gap: 10 }}>
               <BtnSecondary onClick={() => setStep(2)}>← Editar</BtnSecondary>
               <button onClick={handleGenerar} disabled={loading}
-                style={{ flex: 1, background: loading ? "#e9e4f5" : `linear-gradient(135deg, ${C.record}, ${C.accent})`, border: "none", color: loading ? C.muted : "#fff", borderRadius: 6, padding: "13px 24px", fontFamily: "inherit", fontSize: 13, fontWeight: 700, letterSpacing: 2, cursor: loading ? "wait" : "pointer", transition: "all 0.3s" }}>
+                style={{ flex: 1, background: loading ? "#e9e4f5" : "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: loading ? C.muted : "#fff", borderRadius: 6, padding: "13px 24px", fontFamily: "inherit", fontSize: 13, fontWeight: 700, letterSpacing: 2, cursor: loading ? "wait" : "pointer", transition: "all 0.3s" }}>
                 {loading ? "⏳ GENERANDO..." : "⬇ GENERAR Y DESCARGAR DEMANDA .DOCX"}
               </button>
             </div>
