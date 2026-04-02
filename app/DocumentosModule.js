@@ -112,118 +112,122 @@ function Header({ onBack }) {
  
 function ContratoCard({ contrato, color }) {
   const [hovered, setHovered] = useState(false);
- 
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: C.surface,
-        border: `1px solid ${hovered && contrato.activo ? color : C.border}`,
-        borderRadius: 10,
-        padding: "16px 18px",
-        cursor: contrato.activo ? "pointer" : "default",
-        transition: "all 0.2s",
-        opacity: contrato.activo ? 1 : 0.75,
-        boxShadow: hovered && contrato.activo ? `0 4px 16px ${color}30` : "none",
-        transform: hovered && contrato.activo ? "translateY(-2px)" : "none",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-      }}
-    >
-      {/* Status indicator */}
-      <div style={{
-        width: 8, height: 8, borderRadius: "50%", flexShrink: 0,
-        background: contrato.activo ? color : "#d1d5db",
-        boxShadow: contrato.activo ? `0 0 6px ${color}` : "none",
-      }} />
- 
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: C.surface, border: `1px solid ${hovered && contrato.activo ? color : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: contrato.activo ? "pointer" : "default", transition: "all 0.2s", opacity: contrato.activo ? 1 : 0.75, boxShadow: hovered && contrato.activo ? `0 4px 16px ${color}30` : "none", transform: hovered && contrato.activo ? "translateY(-2px)" : "none", display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ width: 8, height: 8, borderRadius: "50%", flexShrink: 0, background: contrato.activo ? color : "#d1d5db", boxShadow: contrato.activo ? `0 0 6px ${color}` : "none" }} />
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 2 }}>{contrato.nombre}</div>
         <div style={{ fontSize: 11, color: C.muted }}>{contrato.desc}</div>
       </div>
- 
       {contrato.activo ? (
-        <div style={{ fontSize: 11, fontWeight: 700, color, letterSpacing: 1, whiteSpace: "nowrap" }}>
-          Generar →
-        </div>
+        <div style={{ fontSize: 11, fontWeight: 700, color, letterSpacing: 1, whiteSpace: "nowrap" }}>Generar →</div>
       ) : (
-        <div style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 20, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#9ca3af", letterSpacing: 1.5, whiteSpace: "nowrap" }}>
-          🔒 PRÓXIMAMENTE
-        </div>
+        <div style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 20, padding: "3px 10px", fontSize: 9, fontWeight: 700, color: "#9ca3af", letterSpacing: 1.5, whiteSpace: "nowrap" }}>🔒 PRÓXIMAMENTE</div>
       )}
     </div>
   );
 }
  
-export default function DocumentosModule({ onBack }) {
-  const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
-  const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
- 
+// ── VISTA DE CATEGORÍA ESPECÍFICA ─────────────────────────────────────────────
+function CategoriaView({ categoria, onBack }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
       <Header onBack={onBack} />
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "32px 20px" }}>
  
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "32px 20px" }}>
- 
-        {/* Welcome */}
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ fontSize: 11, color: C.muted, letterSpacing: 4, fontWeight: 700, marginBottom: 8, textTransform: "uppercase" }}>
-            Biblioteca de Documentos
-          </div>
-          <div style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8 }}>
-            Contratos y Documentos Legales
-          </div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>
-            {totalContratos} documentos disponibles · {totalActivos} activos · {totalContratos - totalActivos} próximamente
-          </div>
-          <div style={{ width: 50, height: 3, background: `linear-gradient(to right, ${C.record}, ${C.accent})`, margin: "0 auto", borderRadius: 2 }} />
+        {/* Breadcrumb */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, fontSize: 12, color: C.muted }}>
+          <span style={{ cursor: "pointer", color: C.accent }} onClick={onBack}>Documentos Legales</span>
+          <span>→</span>
+          <span style={{ color: C.text, fontWeight: 700 }}>{categoria.titulo}</span>
         </div>
  
-        {/* Stats bar */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 32 }}>
-          {CATEGORIAS.map(cat => (
-            <div key={cat.id} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ fontSize: 22 }}>{cat.icon}</div>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: cat.color }}>{cat.contratos.length} contratos</div>
-                <div style={{ fontSize: 10, color: C.muted, marginTop: 1 }}>{cat.titulo.replace("Contratos de ", "").replace("Contratos ", "")}</div>
+        {/* Category header */}
+        <div style={{ background: C.surface, border: `2px solid ${categoria.color}`, borderRadius: 14, padding: "24px 28px", marginBottom: 24, boxShadow: `0 4px 20px ${categoria.color}20` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ fontSize: 40 }}>{categoria.icon}</div>
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: categoria.color, marginBottom: 4 }}>{categoria.titulo}</div>
+              <div style={{ fontSize: 12, color: C.muted }}>
+                {categoria.contratos.length} documentos · {categoria.contratos.filter(c => c.activo).length} activos · {categoria.contratos.filter(c => !c.activo).length} próximamente
               </div>
             </div>
+          </div>
+        </div>
+ 
+        {/* Contracts */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          {categoria.contratos.map(contrato => (
+            <ContratoCard key={contrato.id} contrato={contrato} color={categoria.color} />
           ))}
         </div>
  
-        {/* Categories */}
-        {CATEGORIAS.map(cat => (
-          <div key={cat.id} style={{ marginBottom: 28 }}>
-            {/* Category header */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-              <div style={{ width: 4, height: 28, background: cat.color, borderRadius: 2 }} />
-              <div style={{ fontSize: 22 }}>{cat.icon}</div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: cat.color, letterSpacing: 0.5 }}>{cat.titulo}</div>
-              <div style={{ marginLeft: "auto", fontSize: 10, color: C.muted }}>
-                {cat.contratos.filter(c => c.activo).length}/{cat.contratos.length} activos
-              </div>
-            </div>
- 
-            {/* Contracts grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              {cat.contratos.map(contrato => (
-                <ContratoCard key={contrato.id} contrato={contrato} color={cat.color} />
-              ))}
-            </div>
-          </div>
-        ))}
- 
-        {/* Footer note */}
-        <div style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 10, padding: "16px 20px", textAlign: "center", marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: C.muted }}>
-            ¿Necesitas un documento que no está aquí? Contáctanos y lo agregamos.
-          </div>
+        {/* Footer */}
+        <div style={{ background: C.surface, border: `1px dashed ${C.border}`, borderRadius: 10, padding: "14px 20px", textAlign: "center", marginTop: 20 }}>
+          <div style={{ fontSize: 12, color: C.muted }}>¿Necesitas un documento que no está aquí? Contáctanos y lo agregamos.</div>
         </div>
       </div>
     </div>
   );
+}
+ 
+// ── PORTAL DE CATEGORÍAS ──────────────────────────────────────────────────────
+function PortalDocumentos({ onBack }) {
+  const [categoriaActiva, setCategoriaActiva] = useState(null);
+  const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
+  const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
+ 
+  if (categoriaActiva) {
+    return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} />;
+  }
+ 
+  return (
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
+      <Header onBack={onBack} />
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "32px 20px" }}>
+ 
+        {/* Welcome */}
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{ fontSize: 11, color: C.muted, letterSpacing: 4, fontWeight: 700, marginBottom: 8, textTransform: "uppercase" }}>Biblioteca de Documentos</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8 }}>Contratos y Documentos Legales</div>
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>{totalContratos} documentos · {totalActivos} activos · {totalContratos - totalActivos} próximamente</div>
+          <div style={{ width: 50, height: 3, background: `linear-gradient(to right, ${C.record}, ${C.accent})`, margin: "0 auto", borderRadius: 2 }} />
+        </div>
+ 
+        {/* Category cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+          {CATEGORIAS.map(cat => {
+            const activos = cat.contratos.filter(c => c.activo).length;
+            const [hovered, setHovered] = useState(false);
+            return (
+              <div key={cat.id}
+                onClick={() => setCategoriaActiva(cat)}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                style={{ background: C.surface, border: `2px solid ${hovered ? cat.color : C.border}`, borderRadius: 14, padding: "24px 20px", cursor: "pointer", transition: "all 0.25s", boxShadow: hovered ? `0 8px 28px ${cat.color}25` : "0 2px 8px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-4px)" : "none" }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>{cat.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: hovered ? cat.color : C.text, marginBottom: 6, transition: "color 0.2s" }}>{cat.titulo}</div>
+                <div style={{ fontSize: 11, color: C.muted, marginBottom: 14, lineHeight: 1.5 }}>
+                  {cat.contratos.map(c => c.nombre).slice(0, 2).join(", ")} {cat.contratos.length > 2 ? `y ${cat.contratos.length - 2} más` : ""}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ fontSize: 10, color: C.muted }}>{cat.contratos.length} documentos</div>
+                  {activos > 0
+                    ? <div style={{ background: `${cat.color}15`, border: `1px solid ${cat.color}`, borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: cat.color }}>{activos} ACTIVO{activos > 1 ? "S" : ""}</div>
+                    : <div style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: "#9ca3af" }}>🔒 PRÓX.</div>
+                  }
+                </div>
+                <div style={{ marginTop: 14, fontSize: 11, fontWeight: 700, color: cat.color, letterSpacing: 1 }}>Ver documentos →</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+ 
+export default function DocumentosModule({ onBack }) {
+  return <PortalDocumentos onBack={onBack} />;
 }
