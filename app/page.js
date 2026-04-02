@@ -160,77 +160,29 @@ export default function Home() {
  
 function ModuleCard({ mod, onClick }) {
   const [hovered, setHovered] = useState(false);
- 
   return (
-    <div
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: hovered && mod.available ? "#ffffff" : "#ffffff",
-        border: `2px solid ${hovered && mod.available ? mod.color : "#e9e4f5"}`,
-        borderRadius: 14,
-        padding: "28px 24px",
-        cursor: mod.available ? "pointer" : "default",
-        transition: "all 0.25s",
-        position: "relative",
-        overflow: "hidden",
-        boxShadow: hovered && mod.available
-          ? `0 8px 32px rgba(191,0,255,0.2), 0 0 0 1px ${mod.color}`
-          : "0 2px 12px rgba(0,0,0,0.06)",
-        transform: hovered && mod.available ? "translateY(-4px)" : "translateY(0)",
-        opacity: mod.available ? 1 : 0.7,
-      }}
-    >
-      {/* Glow effect on hover */}
-      {hovered && mod.available && (
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(to right, ${mod.color}, #a855f7)`, borderRadius: "12px 12px 0 0" }} />
-      )}
+    <div onClick={onClick} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: "#ffffff", border: `1px solid ${hovered && mod.available ? "#8b1a2e" : "#ddd"}`, borderLeft: `4px solid ${mod.available ? (hovered ? "#b52240" : "#8b1a2e") : "#ccc"}`, borderRadius: 4, padding: "24px 22px", cursor: mod.available ? "pointer" : "default", transition: "all 0.2s", boxShadow: hovered && mod.available ? "0 4px 20px rgba(0,0,0,0.12)" : "0 1px 4px rgba(0,0,0,0.06)", transform: hovered && mod.available ? "translateY(-2px)" : "none", opacity: mod.available ? 1 : 0.65, position: "relative" }}>
  
-      {/* Lock overlay for unavailable */}
       {!mod.available && (
-        <div style={{ position: "absolute", top: 14, right: 14, fontSize: 16 }}>🔒</div>
+        <div style={{ position: "absolute", top: 12, right: 12, background: "#f0f0f0", border: "1px solid #ddd", borderRadius: 3, padding: "2px 8px", fontSize: 9, fontWeight: 700, color: "#999", letterSpacing: 1.5, fontFamily: "'Courier New', monospace" }}>🔒 PRÓXIMAMENTE</div>
       )}
  
-      {/* Tag */}
-      <div style={{ display: "inline-block", background: mod.available ? "rgba(191,0,255,0.1)" : "rgba(107,33,168,0.08)", border: `1px solid ${mod.available ? "#bf00ff" : "#c084fc"}`, borderRadius: 20, padding: "3px 10px", fontSize: 9, fontWeight: 700, letterSpacing: 2, color: mod.available ? "#bf00ff" : "#9d7ec9", marginBottom: 16, textTransform: "uppercase" }}>
-        {mod.tag}
-      </div>
+      {mod.available && (
+        <div style={{ position: "absolute", top: 12, right: 12, background: mod.tag === "ACTIVO" ? "rgba(139,26,46,0.08)" : "rgba(0,0,0,0.04)", border: `1px solid ${mod.tag === "ACTIVO" ? "#8b1a2e" : "#ccc"}`, borderRadius: 3, padding: "2px 8px", fontSize: 9, fontWeight: 700, color: mod.tag === "ACTIVO" ? "#8b1a2e" : "#888", letterSpacing: 1.5, fontFamily: "'Courier New', monospace" }}>{mod.tag}</div>
+      )}
  
-      {/* Icon */}
-      <div style={{ fontSize: 36, marginBottom: 14, filter: mod.available ? "drop-shadow(0 0 8px rgba(191,0,255,0.4))" : "grayscale(50%)" }}>
-        {mod.icon}
-      </div>
+      <div style={{ fontSize: 28, marginBottom: 14 }}>{mod.icon}</div>
+      <div style={{ fontSize: 15, fontWeight: 700, color: "#1e1e1e", marginBottom: 6, fontFamily: "Georgia, serif" }}>{mod.title}</div>
+      <div style={{ fontSize: 12, color: "#666", lineHeight: 1.7, marginBottom: 16, fontFamily: "'Courier New', monospace" }}>{mod.desc}</div>
  
-      {/* Title */}
-      <div style={{ fontSize: 15, fontWeight: 700, color: "#1e1b2e", marginBottom: 8, letterSpacing: 0.5 }}>
-        {mod.title}
-      </div>
- 
-      {/* Description */}
-      <div style={{ fontSize: 12, color: "#6b21a8", lineHeight: 1.6, marginBottom: mod.available ? 20 : 0 }}>
-        {mod.desc}
-      </div>
- 
-      {/* CTA button */}
-      {mod.available && !mod.comingSoon && (
-        <div style={{ marginTop: 8, display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#bf00ff", letterSpacing: 1, textTransform: "uppercase" }}>
-          Ingresar <span style={{ fontSize: 14 }}>→</span>
+      {mod.available && (
+        <div style={{ fontSize: 11, fontWeight: 700, color: hovered ? "#b52240" : "#8b1a2e", letterSpacing: 1.5, fontFamily: "'Courier New', monospace", transition: "color 0.2s" }}>
+          {mod.comingSoon ? "VER AVANCE →" : "INGRESAR →"}
         </div>
       )}
- 
-      {/* Coming soon active module */}
-      {mod.available && mod.comingSoon && (
-        <div style={{ marginTop: 8, display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, color: "#7c3aed", letterSpacing: 1, textTransform: "uppercase" }}>
-          Ver avance <span style={{ fontSize: 14 }}>→</span>
-        </div>
-      )}
- 
-      {/* Unavailable message */}
       {!mod.available && (
-        <div style={{ marginTop: 12, fontSize: 11, color: "#9d7ec9", fontStyle: "italic" }}>
-          Disponible próximamente
-        </div>
+        <div style={{ fontSize: 11, color: "#aaa", fontFamily: "'Courier New', monospace" }}>Disponible próximamente</div>
       )}
     </div>
   );
