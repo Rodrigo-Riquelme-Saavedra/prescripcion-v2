@@ -186,7 +186,9 @@ export async function POST(req) {
  
   // Registrar actividad
   try {
-    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+    const host = req.headers.get("host");
+    const proto = host?.includes("localhost") ? "http" : "https";
+    const baseUrl = `${proto}://${host}`;
     await fetch(`${baseUrl}/api/registros`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
