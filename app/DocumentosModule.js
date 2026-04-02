@@ -172,6 +172,32 @@ function CategoriaView({ categoria, onBack }) {
   );
 }
  
+// ── TARJETA DE CATEGORÍA ─────────────────────────────────────────────────────
+function CategoriaCard({ cat, onClick }) {
+  const [hovered, setHovered] = useState(false);
+  const activos = cat.contratos.filter(c => c.activo).length;
+  return (
+    <div onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ background: C.surface, border: `2px solid ${hovered ? cat.color : C.border}`, borderRadius: 14, padding: "24px 20px", cursor: "pointer", transition: "all 0.25s", boxShadow: hovered ? `0 8px 28px ${cat.color}25` : "0 2px 8px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-4px)" : "none" }}>
+      <div style={{ fontSize: 36, marginBottom: 12 }}>{cat.icon}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: hovered ? cat.color : C.text, marginBottom: 6, transition: "color 0.2s" }}>{cat.titulo}</div>
+      <div style={{ fontSize: 11, color: C.muted, marginBottom: 14, lineHeight: 1.5 }}>
+        {cat.contratos.slice(0, 2).map(c => c.nombre).join(", ")}{cat.contratos.length > 2 ? ` y ${cat.contratos.length - 2} más` : ""}
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 10, color: C.muted }}>{cat.contratos.length} documentos</div>
+        {activos > 0
+          ? <div style={{ background: `${cat.color}15`, border: `1px solid ${cat.color}`, borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: cat.color }}>{activos} ACTIVO{activos > 1 ? "S" : ""}</div>
+          : <div style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: "#9ca3af" }}>🔒 PRÓX.</div>
+        }
+      </div>
+      <div style={{ marginTop: 14, fontSize: 11, fontWeight: 700, color: cat.color, letterSpacing: 1 }}>Ver documentos →</div>
+    </div>
+  );
+}
+ 
 // ── PORTAL DE CATEGORÍAS ──────────────────────────────────────────────────────
 function PortalDocumentos({ onBack }) {
   const [categoriaActiva, setCategoriaActiva] = useState(null);
@@ -197,31 +223,9 @@ function PortalDocumentos({ onBack }) {
  
         {/* Category cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-          {CATEGORIAS.map(cat => {
-            const activos = cat.contratos.filter(c => c.activo).length;
-            const [hovered, setHovered] = useState(false);
-            return (
-              <div key={cat.id}
-                onClick={() => setCategoriaActiva(cat)}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
-                style={{ background: C.surface, border: `2px solid ${hovered ? cat.color : C.border}`, borderRadius: 14, padding: "24px 20px", cursor: "pointer", transition: "all 0.25s", boxShadow: hovered ? `0 8px 28px ${cat.color}25` : "0 2px 8px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-4px)" : "none" }}>
-                <div style={{ fontSize: 36, marginBottom: 12 }}>{cat.icon}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: hovered ? cat.color : C.text, marginBottom: 6, transition: "color 0.2s" }}>{cat.titulo}</div>
-                <div style={{ fontSize: 11, color: C.muted, marginBottom: 14, lineHeight: 1.5 }}>
-                  {cat.contratos.map(c => c.nombre).slice(0, 2).join(", ")} {cat.contratos.length > 2 ? `y ${cat.contratos.length - 2} más` : ""}
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ fontSize: 10, color: C.muted }}>{cat.contratos.length} documentos</div>
-                  {activos > 0
-                    ? <div style={{ background: `${cat.color}15`, border: `1px solid ${cat.color}`, borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: cat.color }}>{activos} ACTIVO{activos > 1 ? "S" : ""}</div>
-                    : <div style={{ background: "#f3f4f6", border: "1px solid #e5e7eb", borderRadius: 20, padding: "2px 10px", fontSize: 9, fontWeight: 700, color: "#9ca3af" }}>🔒 PRÓX.</div>
-                  }
-                </div>
-                <div style={{ marginTop: 14, fontSize: 11, fontWeight: 700, color: cat.color, letterSpacing: 1 }}>Ver documentos →</div>
-              </div>
-            );
-          })}
+          {CATEGORIAS.map(cat => (
+            <CategoriaCard key={cat.id} cat={cat} onClick={() => setCategoriaActiva(cat)} />
+          ))}
         </div>
       </div>
     </div>
