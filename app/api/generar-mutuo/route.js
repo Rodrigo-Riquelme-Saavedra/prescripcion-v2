@@ -184,6 +184,22 @@ export async function POST(req) {
     ? `Mutuo_Vista_${form.nombreMutuante.replace(/\s+/g, "_")}.docx`
     : `Mutuo_Cuotas_${form.nombreEmpresaMutuaria.replace(/\s+/g, "_")}.docx`;
  
+  // Registrar actividad
+  try {
+    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+    await fetch(`${baseUrl}/api/registros`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipo: tipo === "vista" ? "Mutuo A la Vista" : "Mutuo en Cuotas",
+        cliente: tipo === "vista" ? form.nombreMutuaria : form.nombreEmpresaMutuaria,
+        rut: tipo === "vista" ? form.rutMutuaria : form.rutEmpresa,
+        abogado: "-",
+        monto: tipo === "vista" ? form.monto?.replace(/\D/g,"") : form.monto?.replace(/\D/g,""),
+      }),
+    });
+  } catch {}
+ 
   return new Response(buffer, {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
