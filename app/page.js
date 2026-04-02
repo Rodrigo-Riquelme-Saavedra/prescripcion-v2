@@ -21,10 +21,10 @@ const MODULES = [
   { id: "configuracion", icon: "⚙", title: "Configuración del Sistema", desc: "Parámetros, usuarios y configuración general de la plataforma.", tag: "PRÓXIMAMENTE", available: false, comingSoon: false, color: "#999" },
 ];
  
-const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.35">
+const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
   <rect x="350" y="50" width="100" height="18" fill="#ffffff" rx="2"/>
   <polygon points="400,15 310,70 490,70" fill="#ffffff"/>
-  <rect x="370" y="25" width="60" height="7" fill="#b52240" rx="1"/>
+  <rect x="370" y="25" width="60" height="7" fill="#d03050" rx="1"/>
   <rect x="75" y="70" width="650" height="12" fill="#ffffff" rx="2"/>
   <rect x="95" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
   <rect x="135" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
@@ -38,19 +38,19 @@ const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg"
   <rect x="590" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
   <rect x="650" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
   <rect x="690" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="350" y="120" width="100" height="162" fill="#b0b4c0" rx="2"/>
-  <rect x="362" y="132" width="32" height="48" fill="#2d2d2d" rx="1"/>
-  <rect x="406" y="132" width="32" height="48" fill="#2d2d2d" rx="1"/>
-  <rect x="362" y="192" width="76" height="90" fill="#2d2d2d" rx="1"/>
+  <rect x="350" y="120" width="100" height="162" fill="#cccccc" rx="2"/>
+  <rect x="362" y="132" width="32" height="48" fill="#1a1a1a" rx="1"/>
+  <rect x="406" y="132" width="32" height="48" fill="#1a1a1a" rx="1"/>
+  <rect x="362" y="192" width="76" height="90" fill="#1a1a1a" rx="1"/>
   <rect x="75" y="282" width="650" height="14" fill="#ffffff" rx="2"/>
   <rect x="55" y="296" width="690" height="10" fill="#dddddd" rx="2"/>
-  <rect x="35" y="306" width="730" height="8" fill="#b0b4c0" rx="2"/>
-  <rect x="160" y="190" width="58" height="92" fill="#b52240" rx="2"/>
-  <rect x="582" y="190" width="58" height="92" fill="#b52240" rx="2"/>
-  <line x1="200" y1="148" x2="200" y2="190" stroke="#c9a84c" stroke-width="2"/>
-  <line x1="178" y1="160" x2="222" y2="160" stroke="#c9a84c" stroke-width="2"/>
-  <ellipse cx="188" cy="168" rx="9" ry="5" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
-  <ellipse cx="212" cy="168" rx="9" ry="5" fill="none" stroke="#c9a84c" stroke-width="1.5"/>
+  <rect x="35" y="306" width="730" height="8" fill="#cccccc" rx="2"/>
+  <rect x="160" y="190" width="58" height="92" fill="#d03050" rx="2"/>
+  <rect x="582" y="190" width="58" height="92" fill="#d03050" rx="2"/>
+  <line x1="200" y1="148" x2="200" y2="190" stroke="#f0c060" stroke-width="2"/>
+  <line x1="178" y1="160" x2="222" y2="160" stroke="#f0c060" stroke-width="2"/>
+  <ellipse cx="188" cy="168" rx="9" ry="5" fill="none" stroke="#f0c060" stroke-width="1.5"/>
+  <ellipse cx="212" cy="168" rx="9" ry="5" fill="none" stroke="#f0c060" stroke-width="1.5"/>
 </svg>`;
  
 function ModuleCard({ mod, onClick }) {
@@ -132,7 +132,7 @@ export default function Home() {
 }
  
  
-const BALANCE_SVG_PAGE = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.35">
+const BALANCE_SVG_PAGE = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
   <line x1="400" y1="60" x2="400" y2="280" stroke="#ffffff" stroke-width="5"/>
   <rect x="388" y="270" width="24" height="60" fill="#dddddd" rx="2"/>
   <rect x="340" y="320" width="120" height="10" fill="#ffffff" rx="2"/>
@@ -276,7 +276,7 @@ function Prescripcion({ onBack }) {
         <button onClick={onBack} style={{ marginLeft: "auto", background: "rgba(139,26,46,0.1)", border: "1px solid #8b1a2e", borderRadius: 4, padding: "6px 16px", fontSize: 11, color: "#b52240", fontWeight: 700, cursor: "pointer", fontFamily: "'Courier New', monospace", letterSpacing: 1 }}>← Volver al Portal</button>
       </div>
       <div style={{ position: "relative", background: "#1e1e1e", height: 180, overflow: "hidden", display: "flex", alignItems: "center" }}>
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 60 }} dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.35">
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 60 }} dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
   <line x1="400" y1="60" x2="400" y2="280" stroke="#ffffff" stroke-width="5"/>
   <rect x="388" y="270" width="24" height="60" fill="#dddddd" rx="2"/>
   <rect x="340" y="320" width="120" height="10" fill="#ffffff" rx="2"/>
