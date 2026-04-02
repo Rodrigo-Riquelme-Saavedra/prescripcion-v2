@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import MandatosModule from "./MandatosModule";
 import ModuleHero from "./ModuleHero";
  
 const C = {
@@ -144,7 +145,7 @@ function ContratoCard({ contrato, color, onSelect }) {
 }
  
 // ── VISTA DE CATEGORÍA ESPECÍFICA ─────────────────────────────────────────────
-function CategoriaView({ categoria, onBack, onNavigate }) {
+function CategoriaView({ categoria, onBack, onContrato }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
       <ModuleHero title="Documentos Legales" subtitle="Biblioteca de contratos y documentos jurídicos" onBack={onBack} />
@@ -186,6 +187,10 @@ function CategoriaView({ categoria, onBack, onNavigate }) {
   );
 }
  
+function MandatosInline({ tipo, onBack }) {
+  return <MandatosModule onBack={onBack} initialTipo={tipo} />;
+}
+ 
 // ── TARJETA DE CATEGORÍA ─────────────────────────────────────────────────────
 function CategoriaCard({ cat, onClick }) {
   const [hovered, setHovered] = useState(false);
@@ -215,11 +220,17 @@ function CategoriaCard({ cat, onClick }) {
 // ── PORTAL DE CATEGORÍAS ──────────────────────────────────────────────────────
 function PortalDocumentos({ onBack }) {
   const [categoriaActiva, setCategoriaActiva] = useState(null);
+  const [contratoActivo, setContratoActivo] = useState(null);
+ 
+  if (contratoActivo === "mandato-judicial-juridica" || contratoActivo === "mandato-judicial-natural" || contratoActivo === "mandato-general") {
+    const tipo = contratoActivo.replace("mandato-", "");
+    return <MandatosInline tipo={tipo} onBack={() => setContratoActivo(null)} />;
+  }
   const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
   const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
  
   if (categoriaActiva) {
-    return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} onNavigate={onNavigate} />;
+    return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} onContrato={setContratoActivo} />;
   }
  
   return (
@@ -246,6 +257,6 @@ function PortalDocumentos({ onBack }) {
   );
 }
  
-export default function DocumentosModule({ onBack, onNavigate }) {
-  return <PortalDocumentos onBack={onBack} onNavigate={onNavigate} />;
+export default function DocumentosModule({ onBack }) {
+  return <PortalDocumentos onBack={onBack} />;
 }
