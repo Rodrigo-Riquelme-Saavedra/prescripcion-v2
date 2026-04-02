@@ -122,11 +122,13 @@ function Header({ onBack }) {
   );
 }
  
-function ContratoCard({ contrato, color }) {
+function ContratoCard({ contrato, color, onSelect }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: C.surface, border: `1px solid ${hovered && contrato.activo ? color : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: contrato.activo ? "pointer" : "default", onClick: contrato.activo ? () => onModuleSelect && onModuleSelect(contrato.id) : undefined, transition: "all 0.2s", opacity: contrato.activo ? 1 : 0.75, boxShadow: hovered && contrato.activo ? `0 4px 16px ${color}30` : "none", transform: hovered && contrato.activo ? "translateY(-2px)" : "none", display: "flex", alignItems: "center", gap: 14 }}>
+    <div
+      onClick={() => contrato.activo && onSelect && onSelect(contrato.id)}
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: C.surface, border: `1px solid ${hovered && contrato.activo ? color : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: contrato.activo ? "pointer" : "default", transition: "all 0.2s", opacity: contrato.activo ? 1 : 0.75, boxShadow: hovered && contrato.activo ? `0 4px 16px ${color}30` : "none", transform: hovered && contrato.activo ? "translateY(-2px)" : "none", display: "flex", alignItems: "center", gap: 14 }}>
       <div style={{ width: 8, height: 8, borderRadius: "50%", flexShrink: 0, background: contrato.activo ? color : "#d1d5db", boxShadow: contrato.activo ? `0 0 6px ${color}` : "none" }} />
       <div style={{ flex: 1 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 2 }}>{contrato.nombre}</div>
