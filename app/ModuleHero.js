@@ -1,20 +1,33 @@
 "use client";
  
-const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
-  <line x1="400" y1="60" x2="400" y2="280" stroke="#ffffff" stroke-width="5"/>
-  <rect x="388" y="270" width="24" height="60" fill="#dddddd" rx="2"/>
-  <rect x="340" y="320" width="120" height="10" fill="#ffffff" rx="2"/>
-  <rect x="310" y="330" width="180" height="8" fill="#dddddd" rx="2"/>
-  <line x1="200" y1="110" x2="600" y2="110" stroke="#ffffff" stroke-width="3"/>
-  <rect x="396" y="56" width="8" height="8" fill="#f0c060" rx="1"/>
-  <line x1="200" y1="110" x2="180" y2="200" stroke="#cccccc" stroke-width="2.5"/>
-  <line x1="600" y1="110" x2="620" y2="200" stroke="#cccccc" stroke-width="2.5"/>
-  <ellipse cx="180" cy="220" rx="70" ry="25" fill="none" stroke="#dddddd" stroke-width="2.5"/>
-  <path d="M 110 200 Q 180 180 250 200" fill="none" stroke="#dddddd" stroke-width="2.5"/>
-  <ellipse cx="620" cy="225" rx="70" ry="25" fill="none" stroke="#e05070" stroke-width="2.5"/>
-  <path d="M 550 205 Q 620 185 690 205" fill="none" stroke="#e05070" stroke-width="2.5"/>
-  <circle cx="400" cy="108" r="10" fill="#f0c060"/>
-  <rect x="385" y="50" width="30" height="12" fill="#f0c060" rx="1"/>
+const BALANCE_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+  <!-- Soporte vertical central -->
+  <line x1="400" y1="40" x2="400" y2="300" stroke="#ffffff" stroke-width="6" opacity="0.8"/>
+  <!-- Base -->
+  <rect x="350" y="300" width="100" height="14" fill="#dddddd" rx="3" opacity="0.8"/>
+  <rect x="320" y="314" width="160" height="10" fill="#bbbbbb" rx="2" opacity="0.7"/>
+  <rect x="290" y="324" width="220" height="8" fill="#999999" rx="2" opacity="0.6"/>
+  <!-- Barra horizontal -->
+  <line x1="180" y1="120" x2="620" y2="120" stroke="#ffffff" stroke-width="5" opacity="0.85"/>
+  <!-- Pivote central -->
+  <circle cx="400" cy="120" r="14" fill="#f0c060" opacity="0.9"/>
+  <circle cx="400" cy="120" r="8" fill="#d4a030" opacity="0.9"/>
+  <!-- Soporte arriba -->
+  <rect x="388" y="40" width="24" height="16" fill="#f0c060" rx="3" opacity="0.9"/>
+  <!-- Cadenas izquierda -->
+  <line x1="200" y1="120" x2="180" y2="210" stroke="#cccccc" stroke-width="3" opacity="0.8"/>
+  <line x1="180" y1="120" x2="180" y2="210" stroke="#cccccc" stroke-width="3" opacity="0.8"/>
+  <!-- Plato izquierdo -->
+  <ellipse cx="180" cy="218" rx="75" ry="18" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.85"/>
+  <ellipse cx="180" cy="210" rx="75" ry="12" fill="#444444" stroke="#cccccc" stroke-width="2" opacity="0.6"/>
+  <!-- Cadenas derecha (más bajo = más pesado) -->
+  <line x1="600" y1="120" x2="620" y2="230" stroke="#e05070" stroke-width="3" opacity="0.8"/>
+  <line x1="620" y1="120" x2="620" y2="230" stroke="#e05070" stroke-width="3" opacity="0.8"/>
+  <!-- Plato derecho -->
+  <ellipse cx="620" cy="238" rx="75" ry="18" fill="none" stroke="#e05070" stroke-width="3" opacity="0.85"/>
+  <ellipse cx="620" cy="230" rx="75" ry="12" fill="#3a1020" stroke="#e05070" stroke-width="2" opacity="0.6"/>
+  <!-- Texto IUSTITIA -->
+  <text x="360" y="355" fill="#f0c060" font-size="18" font-family="Georgia, serif" opacity="0.7" letter-spacing="6">IUSTITIA</text>
 </svg>`;
  
 export default function ModuleHero({ title, subtitle, onBack }) {
@@ -36,10 +49,10 @@ export default function ModuleHero({ title, subtitle, onBack }) {
           ← Volver al Portal
         </button>
       </div>
-      <div style={{ position: "relative", background: "#1e1e1e", height: 180, overflow: "hidden", display: "flex", alignItems: "center" }}>
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 60 }}
+      <div style={{ position: "relative", background: "#1e1e1e", height: 200, overflow: "hidden", display: "flex", alignItems: "center" }}>
+        <div style={{ position: "absolute", right: 0, top: 0, width: "55%", height: "100%" }}
           dangerouslySetInnerHTML={{ __html: BALANCE_SVG }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, #1e1e1e 40%, transparent 70%, #1e1e1e 95%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, #1e1e1e 35%, rgba(30,30,30,0.7) 60%, rgba(30,30,30,0.2) 100%)" }} />
         <div style={{ position: "relative", zIndex: 2, padding: "0 48px" }}>
           <div style={{ fontSize: 10, color: "#b52240", letterSpacing: 4, fontWeight: 700, marginBottom: 8, fontFamily: "'Courier New', monospace" }}>PORTAL DE GESTIÓN JURÍDICA · GRUPO GV</div>
           <div style={{ fontSize: 26, fontWeight: 700, color: "#f4f4f4", fontFamily: "Georgia, serif", marginBottom: 4 }}>{title}</div>
