@@ -227,7 +227,7 @@ function PortalDocumentos({ onBack }) {
  
   if (contratoActivo === "mandato-judicial-juridica" || contratoActivo === "mandato-judicial-natural" || contratoActivo === "mandato-general") {
     const tipo = contratoActivo.replace("mandato-", "");
-    return <MandatosInline tipo={tipo} onBack={() => { setContratoActivo(null); }} />;
+    return <MandatosInline tipo={tipo} onBack={() => setContratoActivo(null)} />;
   }
  
   if (categoriaActiva) {
