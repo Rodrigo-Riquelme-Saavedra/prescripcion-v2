@@ -218,22 +218,15 @@ function CategoriaCard({ cat, onClick }) {
 }
  
 // ── PORTAL DE CATEGORÍAS ──────────────────────────────────────────────────────
-function PortalDocumentos({ onBack }) {
-  const [vista, setVista] = useState({ tipo: "portal", data: null });
- 
+function PortalDocumentos({ onBack, onVistaChange, vista }) {
   const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
   const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
- 
-  if (vista.tipo === "mandato") {
-    const tipo = vista.data.replace("mandato-", "");
-    return <MandatosInline tipo={tipo} onBack={() => setVista({ tipo: "portal", data: null })} />;
-  }
  
   if (vista.tipo === "categoria") {
     return <CategoriaView
       categoria={vista.data}
-      onBack={() => setVista({ tipo: "portal", data: null })}
-      onContrato={(id) => { console.log("CONTRATO CLICK:", id); setVista({ tipo: "mandato", data: id }); }}
+      onBack={() => onVistaChange({ tipo: "portal", data: null })}
+      onContrato={(id) => onVistaChange({ tipo: "mandato", data: id })}
     />;
   }
  
@@ -253,7 +246,7 @@ function PortalDocumentos({ onBack }) {
         {/* Category cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
           {CATEGORIAS.map(cat => (
-            <CategoriaCard key={cat.id} cat={cat} onClick={() => setVista({ tipo: "categoria", data: cat })} />
+            <CategoriaCard key={cat.id} cat={cat} onClick={() => onVistaChange({ tipo: "categoria", data: cat })} />
           ))}
         </div>
       </div>
@@ -262,5 +255,12 @@ function PortalDocumentos({ onBack }) {
 }
  
 export default function DocumentosModule({ onBack }) {
-  return <PortalDocumentos onBack={onBack} />;
+  const [vista, setVista] = useState({ tipo: "portal", data: null });
+ 
+  if (vista.tipo === "mandato") {
+    const tipo = vista.data.replace("mandato-", "");
+    return <MandatosInline tipo={tipo} onBack={() => setVista({ tipo: "portal", data: null })} />;
+  }
+ 
+  return <PortalDocumentos onBack={onBack} onVistaChange={setVista} vista={vista} />;
 }
