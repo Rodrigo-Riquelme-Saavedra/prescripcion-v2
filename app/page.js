@@ -83,7 +83,7 @@ export default function Home() {
   if (currentModule === "prescripcion") return <Prescripcion onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mutuo") return <MutuoModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "reportes") return <ReportesModule onBack={() => setCurrentModule(null)} />;
-  if (currentModule === "documentos") return <DocumentosModule onBack={() => setCurrentModule(null)} onModuleSelect={(id) => {
+  if (currentModule === "documentos") return <DocumentosModule onBack={() => setCurrentModule(null)} onNavigate={(id) => {
     if (["mandato-judicial-juridica","mandato-judicial-natural","mandato-general"].includes(id)) setCurrentModule("mandatos");
   }} />;
  
