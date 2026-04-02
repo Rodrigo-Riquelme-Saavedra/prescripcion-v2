@@ -2,9 +2,16 @@
 import { useState, useEffect } from "react";
  
 const C = {
-  bg: "#f0f0f5", surface: "#ffffff", border: "#c084fc",
-  accent: "#a855f7", record: "#bf00ff", text: "#1e1b2e",
-  muted: "#6b21a8", dim: "#e9e4f5", red: "#ef4444", green: "#22c55e",
+  bg:      "#f4f4f4",
+  surface: "#ffffff",
+  border:  "#c8b8a2",
+  accent:  "#b52240",
+  record:  "#8b1a2e",
+  text:    "#1e1e1e",
+  muted:   "#555555",
+  dim:     "#eeeeee",
+  red:     "#c0392b",
+  green:   "#27ae60",
 };
  
 const ADMIN_PASSWORD = "GVSolution2026";
@@ -23,7 +30,7 @@ const TIPO_ICONS = {
  
 function Header({ onBack }) {
   return (
-    <div style={{ background: "linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%)", borderBottom: `3px solid ${C.record}`, padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18 }}>
+    <div style={{ background: "#1e1e1e", borderBottom: "3px solid #8b1a2e", padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18 }}>
       <img src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png" alt="Grupo GV" style={{ height: 54, objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(100,180,255,0.6))" }} onError={(e) => { e.target.style.display = "none"; }} />
       <div style={{ width: 1, height: 36, background: `linear-gradient(to bottom, transparent, ${C.record}, transparent)` }} />
       <div>
