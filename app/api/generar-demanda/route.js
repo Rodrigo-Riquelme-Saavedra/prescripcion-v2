@@ -1,3 +1,6 @@
+JS
+Copiar
+
 import {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, WidthType, BorderStyle, ShadingType,
@@ -225,6 +228,24 @@ export async function POST(req) {
   });
  
   const buffer = await Packer.toBuffer(doc);
+ 
+  // Registrar actividad
+  try {
+    const host = req.headers.get("host");
+    const proto = host?.includes("localhost") ? "http" : "https";
+    const baseUrl = `${proto}://${host}`;
+    await fetch(`${baseUrl}/api/registros`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipo: "Prescripción",
+        cliente: form.empresa,
+        rut: form.rutEmpresa,
+        abogado: form.abogado,
+        monto: totalDeuda,
+      }),
+    });
+  } catch {}
  
   return new Response(buffer, {
     headers: {
