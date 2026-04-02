@@ -3,6 +3,7 @@ import { useState } from "react";
 import MutuoModule from "./MutuoModule";
 import ReportesModule from "./ReportesModule";
 import DocumentosModule from "./DocumentosModule";
+import MandatosModule from "./MandatosModule";
  
 const C = {
   bg: "#f4f4f4", surface: "#ffffff", border: "#c8b8a2",
@@ -82,7 +83,9 @@ export default function Home() {
   if (currentModule === "prescripcion") return <Prescripcion onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mutuo") return <MutuoModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "reportes") return <ReportesModule onBack={() => setCurrentModule(null)} />;
-  if (currentModule === "documentos") return <DocumentosModule onBack={() => setCurrentModule(null)} />;
+  if (currentModule === "documentos") return <DocumentosModule onBack={() => setCurrentModule(null)} onModuleSelect={(id) => {
+    if (["mandato-judicial-juridica","mandato-judicial-natural","mandato-general"].includes(id)) setCurrentModule("mandatos");
+  }} />;
  
   return (
     <div style={{ minHeight: "100vh", background: "#f4f4f4", fontFamily: "Georgia, 'Times New Roman', serif", color: "#1e1e1e" }}>
