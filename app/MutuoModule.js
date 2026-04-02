@@ -1,6 +1,16 @@
 "use client";
 import { useState } from "react";
  
+async function registrarActividad(tipo, cliente, rut, monto) {
+  try {
+    await fetch("/api/registros", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo, cliente, rut, abogado: "-", monto }),
+    });
+  } catch {}
+}
+ 
 const C = {
   bg: "#f0f0f5", surface: "#ffffff", border: "#c084fc",
   accent: "#a855f7", record: "#bf00ff", text: "#1e1b2e",
@@ -63,6 +73,7 @@ function MutuoVista({ onBack }) {
       const a = document.createElement("a");
       a.href = url; a.download = `Mutuo_Vista_${form.nombreMutuante.replace(/\s+/g,"_")}.docx`; a.click();
       URL.revokeObjectURL(url);
+      await registrarActividad("Mutuo A la Vista", form.nombreMutuaria, form.rutMutuaria, form.monto?.replace(/\D/g,""));
     } catch { setError("Error generando el documento."); }
     finally { setLoading(false); }
   };
@@ -186,6 +197,7 @@ function MutuoCuotas({ onBack }) {
       const a = document.createElement("a");
       a.href = url; a.download = `Mutuo_Cuotas_${form.nombreEmpresaMutuaria.replace(/\s+/g,"_")}.docx`; a.click();
       URL.revokeObjectURL(url);
+      await registrarActividad("Mutuo en Cuotas", form.nombreEmpresaMutuaria, form.rutEmpresa, form.monto?.replace(/\D/g,""));
     } catch { setError("Error generando el documento."); }
     finally { setLoading(false); }
   };
