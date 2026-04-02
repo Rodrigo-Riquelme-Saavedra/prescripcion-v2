@@ -133,7 +133,7 @@ function ContratoCard({ contrato, color }) {
 function CategoriaView({ categoria, onBack }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header onBack={onBack} />
+      <ModuleHero title="Documentos Legales" subtitle="Biblioteca de contratos y documentos jurídicos" onBack={onBack} />
       <div style={{ maxWidth: 860, margin: "0 auto", padding: "32px 20px" }}>
  
         {/* Breadcrumb */}
@@ -210,7 +210,7 @@ function PortalDocumentos({ onBack }) {
  
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header onBack={onBack} />
+      <ModuleHero title="Documentos Legales" subtitle="Biblioteca de contratos y documentos jurídicos" onBack={onBack} />
       <div style={{ maxWidth: 960, margin: "0 auto", padding: "32px 20px" }}>
  
         {/* Welcome */}
