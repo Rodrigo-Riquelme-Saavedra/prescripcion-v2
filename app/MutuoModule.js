@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ModuleHero from "./ModuleHero";
  
 async function registrarActividad(tipo, cliente, rut, monto) {
   try {
