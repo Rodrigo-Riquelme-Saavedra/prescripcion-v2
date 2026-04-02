@@ -222,12 +222,13 @@ function PortalDocumentos({ onBack }) {
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [contratoActivo, setContratoActivo] = useState(null);
  
-  if (contratoActivo === "mandato-judicial-juridica" || contratoActivo === "mandato-judicial-natural" || contratoActivo === "mandato-general") {
-    const tipo = contratoActivo.replace("mandato-", "");
-    return <MandatosInline tipo={tipo} onBack={() => setContratoActivo(null)} />;
-  }
   const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
   const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
+ 
+  if (contratoActivo === "mandato-judicial-juridica" || contratoActivo === "mandato-judicial-natural" || contratoActivo === "mandato-general") {
+    const tipo = contratoActivo.replace("mandato-", "");
+    return <MandatosInline tipo={tipo} onBack={() => { setContratoActivo(null); }} />;
+  }
  
   if (categoriaActiva) {
     return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} onContrato={setContratoActivo} />;
