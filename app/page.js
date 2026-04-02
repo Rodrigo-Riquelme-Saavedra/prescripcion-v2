@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import MutuoModule from "./MutuoModule";
+import ReportesModule from "./ReportesModule";
  
 const C = {
   bg:      "#f0f0f5",
@@ -60,11 +61,11 @@ const MODULES = [
     id: "reportes",
     icon: "📊",
     title: "Reportes y Estadísticas",
-    desc: "Dashboards, métricas de casos y reportes de gestión.",
-    tag: "PRÓXIMAMENTE",
-    available: false,
+    desc: "Dashboards, métricas de casos, gráficos y exportación Excel. Acceso solo administrador.",
+    tag: "ACTIVO",
+    available: true,
     comingSoon: false,
-    color: "#6b21a8",
+    color: "#bf00ff",
   },
   {
     id: "configuracion",
@@ -87,6 +88,9 @@ export default function Home() {
  
   if (currentModule === "mutuo") {
     return <MutuoModule onBack={() => setCurrentModule(null)} />;
+  }
+  if (currentModule === "reportes") {
+    return <ReportesModule onBack={() => setCurrentModule(null)} />;
   }
  
   return (
