@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ModuleHero from "./ModuleHero";
  
 const C = {
   bg: "#f4f4f4", surface: "#ffffff", border: "#c8b8a2",
