@@ -2,6 +2,7 @@
 import { useState } from "react";
 import MutuoModule from "./MutuoModule";
 import ReportesModule from "./ReportesModule";
+import DocumentosModule from "./DocumentosModule";
  
 const C = {
   bg:      "#f0f0f5",
@@ -41,11 +42,11 @@ const MODULES = [
     id: "documentos",
     icon: "📄",
     title: "Documentos Legales",
-    desc: "Generador de otros documentos legales y escritos jurídicos.",
-    tag: "PRÓXIMAMENTE",
-    available: false,
+    desc: "Contratos de compraventa, arriendo, civiles y laborales. 15 tipos de documentos.",
+    tag: "ACTIVO",
+    available: true,
     comingSoon: false,
-    color: "#6b21a8",
+    color: "#bf00ff",
   },
   {
     id: "clientes",
@@ -91,6 +92,9 @@ export default function Home() {
   }
   if (currentModule === "reportes") {
     return <ReportesModule onBack={() => setCurrentModule(null)} />;
+  }
+  if (currentModule === "documentos") {
+    return <DocumentosModule onBack={() => setCurrentModule(null)} />;
   }
  
   return (
