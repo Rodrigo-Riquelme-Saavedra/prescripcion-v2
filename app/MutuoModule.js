@@ -82,7 +82,7 @@ function MutuoVista({ onBack }) {
  
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header title="CONTRATO DE MUTUO / A LA VISTA" onBack={onBack} />
+      <ModuleHero title="Contrato de Mutuo" subtitle="Modalidad A la Vista · Sin plazo determinado" onBack={onBack} />
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "32px 20px" }}>
         <StepNav steps={STEPS} step={step} setStep={setStep} />
  
@@ -206,7 +206,7 @@ function MutuoCuotas({ onBack }) {
  
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header title="CONTRATO DE MUTUO / EN CUOTAS" onBack={onBack} />
+      <ModuleHero title="Contrato de Mutuo" subtitle="Modalidad en Cuotas · Con plan de pagos definido" onBack={onBack} />
       <div style={{ maxWidth: 880, margin: "0 auto", padding: "32px 20px" }}>
         <StepNav steps={STEPS} step={step} setStep={setStep} />
  
@@ -356,7 +356,7 @@ export default function MutuoModule({ onBack }) {
  
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header title="CONTRATOS DE MUTUO" onBack={onBack} />
+      <ModuleHero title="Contratos de Mutuo" subtitle="Selecciona la modalidad del contrato" onBack={onBack} />
       <div style={{ maxWidth: 700, margin: "60px auto", padding: "0 24px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: C.muted, letterSpacing: 4, fontWeight: 700, marginBottom: 10 }}>SELECCIONA EL TIPO DE CONTRATO</div>
