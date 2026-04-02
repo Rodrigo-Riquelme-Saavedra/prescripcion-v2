@@ -127,7 +127,7 @@ function ContratoCard({ contrato, color, onSelect }) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      onClick={() => contrato.activo && onSelect && onSelect(contrato.id)}
+      onClick={() => { console.log("CARD CLICK:", contrato.id, "activo:", contrato.activo, "onSelect:", !!onSelect); contrato.activo && onSelect && onSelect(contrato.id); }}
       onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
       style={{ background: C.surface, border: `1px solid ${hovered && contrato.activo ? color : C.border}`, borderRadius: 10, padding: "16px 18px", cursor: contrato.activo ? "pointer" : "default", transition: "all 0.2s", opacity: contrato.activo ? 1 : 0.75, boxShadow: hovered && contrato.activo ? `0 4px 16px ${color}30` : "none", transform: hovered && contrato.activo ? "translateY(-2px)" : "none", display: "flex", alignItems: "center", gap: 14 }}>
       <div style={{ width: 8, height: 8, borderRadius: "50%", flexShrink: 0, background: contrato.activo ? color : "#d1d5db", boxShadow: contrato.activo ? `0 0 6px ${color}` : "none" }} />
@@ -233,7 +233,7 @@ function PortalDocumentos({ onBack }) {
     return <CategoriaView
       categoria={vista.data}
       onBack={() => setVista({ tipo: "portal", data: null })}
-      onContrato={(id) => setVista({ tipo: "mandato", data: id })}
+      onContrato={(id) => { console.log("CONTRATO CLICK:", id); setVista({ tipo: "mandato", data: id }); }}
     />;
   }
  
