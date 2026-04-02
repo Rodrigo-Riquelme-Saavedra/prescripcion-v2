@@ -233,6 +233,17 @@ function ModuleCard({ mod, onClick }) {
 }
  
  
+// ─── REGISTRO DE ACTIVIDAD ────────────────────────────────────────────────
+async function registrarActividad(tipo, cliente, rut, abogado, monto) {
+  try {
+    await fetch("/api/registros", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo, cliente, rut, abogado, monto }),
+    });
+  } catch {}
+}
+ 
 // ─── PRESCRIPCION MODULE (full form) ───────────────────────────────────────
  
 const fmt = (n) => Number(n || 0).toLocaleString("es-CL");
@@ -305,6 +316,7 @@ function Prescripcion({ onBack }) {
       const a = document.createElement("a");
       a.href = url; a.download = `Demanda_Prescripcion_${form.empresa.replace(/\s+/g, "_")}.docx`; a.click();
       URL.revokeObjectURL(url);
+      await registrarActividad("Prescripción", form.empresa, form.rutEmpresa, form.abogado, totalDeuda);
     } catch { setError("Hubo un error generando el documento. Intenta nuevamente."); }
     finally { setLoading(false); }
   };
