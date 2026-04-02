@@ -1,7 +1,6 @@
 "use client";
 import { useState, createContext, useContext } from "react";
 import ModuleHero from "./ModuleHero";
-import MandatosModule from "./MandatosModule";
  
 const C = {
   bg: "#f4f4f4", surface: "#ffffff", border: "#c8b8a2",
@@ -116,29 +115,23 @@ function CategoriaCard({ cat }) {
   );
 }
  
-export default function DocumentosModule({ onBack }) {
+export default function DocumentosModule({ onBack, onMandato }) {
   const [screen, setScreen] = useState("portal");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
-  const [contratoActivo, setContratoActivo] = useState(null);
  
   const navigate = (destino, data) => {
     if (destino === "categoria") { setCategoriaActiva(data); setScreen("categoria"); }
-    if (destino === "contrato") { setContratoActivo(data); setScreen("contrato"); }
-    if (destino === "portal") { setCategoriaActiva(null); setContratoActivo(null); setScreen("portal"); }
-    if (destino === "back-categoria") { setContratoActivo(null); setScreen("categoria"); }
+    if (destino === "contrato") {
+      if (MANDATOS_IDS.includes(data) && onMandato) {
+        const tipo = data.replace("mandato-", "");
+        onMandato(tipo);
+      }
+    }
+    if (destino === "portal") { setCategoriaActiva(null); setScreen("portal"); }
   };
  
   const totalActivos = CATEGORIAS.reduce((s, c) => s + c.contratos.filter(x => x.activo).length, 0);
   const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
- 
-  if (screen === "contrato" && contratoActivo && MANDATOS_IDS.includes(contratoActivo)) {
-    const tipo = contratoActivo.replace("mandato-", "");
-    return (
-      <NavContext.Provider value={{ navigate }}>
-        <MandatosModule onBack={() => navigate("back-categoria")} initialTipo={tipo} />
-      </NavContext.Provider>
-    );
-  }
  
   if (screen === "categoria" && categoriaActiva) {
     return (
