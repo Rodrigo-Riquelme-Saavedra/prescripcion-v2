@@ -142,7 +142,7 @@ function ContratoCard({ contrato, color }) {
 }
  
 // ── VISTA DE CATEGORÍA ESPECÍFICA ─────────────────────────────────────────────
-function CategoriaView({ categoria, onBack }) {
+function CategoriaView({ categoria, onBack, onModuleSelect }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
       <ModuleHero title="Documentos Legales" subtitle="Biblioteca de contratos y documentos jurídicos" onBack={onBack} />
@@ -217,7 +217,7 @@ function PortalDocumentos({ onBack }) {
   const totalContratos = CATEGORIAS.reduce((s, c) => s + c.contratos.length, 0);
  
   if (categoriaActiva) {
-    return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} />;
+    return <CategoriaView categoria={categoriaActiva} onBack={() => setCategoriaActiva(null)} onModuleSelect={onModuleSelect} />;
   }
  
   return (
