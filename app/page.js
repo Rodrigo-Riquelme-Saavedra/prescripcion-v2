@@ -27,24 +27,14 @@ const MODULES = [
     color: "#bf00ff",
   },
   {
-    id: "mutuo-vista",
+    id: "mutuo",
     icon: "🤝",
-    title: "Contrato de Mutuo / A la Vista",
-    desc: "Generador de contratos de mutuo a la vista. Incluye monto, intereses, deudor, acreedor y garantías.",
-    tag: "EN CONSTRUCCIÓN",
+    title: "Contrato Mutuo",
+    desc: "Generador de contratos de mutuo. Incluye modalidad A la Vista y en Cuotas con todos sus campos.",
+    tag: "ACTIVO",
     available: true,
-    comingSoon: true,
-    color: "#7c3aed",
-  },
-  {
-    id: "mutuo-prestacion",
-    icon: "📝",
-    title: "Contrato de Mutuo / Prestación",
-    desc: "Generador de contratos de mutuo con prestación. Plazo, cuotas, notario y fecha de firma.",
-    tag: "EN CONSTRUCCIÓN",
-    available: true,
-    comingSoon: true,
-    color: "#7c3aed",
+    comingSoon: false,
+    color: "#bf00ff",
   },
   {
     id: "documentos",
@@ -95,7 +85,7 @@ export default function Home() {
     return <Prescripcion onBack={() => setCurrentModule(null)} />;
   }
  
-  if (currentModule === "mutuo-vista" || currentModule === "mutuo-prestacion") {
+  if (currentModule === "mutuo") {
     return <MutuoModule onBack={() => setCurrentModule(null)} />;
   }
  
@@ -234,58 +224,6 @@ function ModuleCard({ mod, onClick }) {
           Disponible próximamente
         </div>
       )}
-    </div>
-  );
-}
- 
-// ─── COMING SOON MODULE ────────────────────────────────────────────────────
- 
-const MUTUO_FIELDS = [
-  "Monto del préstamo",
-  "Tasa de interés",
-  "Plazo y cuotas",
-  "Datos del deudor y acreedor",
-  "Garantías / Avales",
-  "Notario y fecha de firma",
-];
- 
-function ComingSoonModule({ id, onBack }) {
-  const title = id === "mutuo-vista" ? "Contrato de Mutuo / A la Vista" : "Contrato de Mutuo / Prestación";
-  return (
-    <div style={{ minHeight: "100vh", background: "#f0f0f5", fontFamily: "'Courier New', monospace", color: "#1e1b2e" }}>
-      <div style={{ background: "linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a1a3e 100%)", borderBottom: "3px solid #bf00ff", padding: "0 32px", height: 72, display: "flex", alignItems: "center", gap: 18 }}>
-        <img src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png" alt="Grupo GV" style={{ height: 54, width: "auto", objectFit: "contain", filter: "drop-shadow(0 0 12px rgba(100,180,255,0.6))" }} onError={(e) => { e.target.style.display = "none"; }} />
-        <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, transparent, #bf00ff, transparent)" }} />
-        <div>
-          <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: 2, color: "#ffffff" }}>{title.toUpperCase()}</div>
-          <div style={{ fontSize: 10, color: "#a855f7", letterSpacing: 1.5, marginTop: 2 }}>Grupo GV · En construcción</div>
-        </div>
-        <button onClick={onBack} style={{ marginLeft: "auto", background: "rgba(191,0,255,0.15)", border: "1px solid #bf00ff", borderRadius: 20, padding: "6px 16px", fontSize: 11, color: "#a855f7", fontWeight: 700, letterSpacing: 1, cursor: "pointer", fontFamily: "inherit" }}>
-          ← Volver al Portal
-        </button>
-      </div>
- 
-      <div style={{ maxWidth: 680, margin: "60px auto", padding: "0 24px", textAlign: "center" }}>
-        <div style={{ fontSize: 56, marginBottom: 24 }}>🚧</div>
-        <div style={{ background: "#ffffff", border: "2px solid #c084fc", borderRadius: 14, padding: 40, boxShadow: "0 4px 20px rgba(168,85,247,0.1)" }}>
-          <div style={{ fontSize: 11, color: "#6b21a8", letterSpacing: 3, fontWeight: 700, marginBottom: 12, textTransform: "uppercase" }}>Módulo en Construcción</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: "#1e1b2e", marginBottom: 12 }}>{title}</div>
-          <div style={{ width: 50, height: 3, background: "linear-gradient(to right, #bf00ff, #a855f7)", margin: "0 auto 24px", borderRadius: 2 }} />
-          <p style={{ fontSize: 13, color: "#6b21a8", lineHeight: 1.8, marginBottom: 28 }}>
-            Este módulo está siendo desarrollado. Incluirá los siguientes campos:
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 32, textAlign: "left" }}>
-            {MUTUO_FIELDS.map((f) => (
-              <div key={f} style={{ background: "#f0f0f5", border: "1px solid #e9e4f5", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e1b2e", display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "#bf00ff", fontSize: 14 }}>✓</span> {f}
-              </div>
-            ))}
-          </div>
-          <div style={{ background: "rgba(191,0,255,0.06)", border: "1px dashed #c084fc", borderRadius: 8, padding: "14px 20px", fontSize: 12, color: "#6b21a8", fontStyle: "italic" }}>
-            ⏳ Estará disponible muy pronto. El equipo de Grupo GV está trabajando en ello.
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
