@@ -223,7 +223,7 @@ function Dashboard({ onBack }) {
  
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
-      <Header onBack={onBack} />
+      <ModuleHero title="Reportes y Estadísticas" subtitle="Panel administrativo · Actividad y métricas del portal" onBack={onBack} />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 20px" }}>
  
         {/* KPI Cards */}
