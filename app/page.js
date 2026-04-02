@@ -130,3 +130,330 @@ export default function Home() {
     </div>
   );
 }
+ 
+ 
+const BALANCE_SVG_PAGE = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.12">
+  <line x1="400" y1="60" x2="400" y2="280" stroke="#e8eaf0" stroke-width="4"/>
+  <rect x="388" y="270" width="24" height="60" fill="#c8ccd8" rx="2"/>
+  <rect x="340" y="320" width="120" height="10" fill="#e8eaf0" rx="2"/>
+  <rect x="310" y="330" width="180" height="8" fill="#c8ccd8" rx="2"/>
+  <line x1="200" y1="110" x2="600" y2="110" stroke="#e8eaf0" stroke-width="3"/>
+  <rect x="396" y="56" width="8" height="8" fill="#c9a84c" rx="1"/>
+  <line x1="200" y1="110" x2="180" y2="200" stroke="#c8ccd8" stroke-width="2"/>
+  <line x1="600" y1="110" x2="620" y2="200" stroke="#c8ccd8" stroke-width="2"/>
+  <ellipse cx="180" cy="220" rx="70" ry="25" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+  <path d="M 110 200 Q 180 180 250 200" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+  <ellipse cx="620" cy="225" rx="70" ry="25" fill="none" stroke="#b52240" stroke-width="2"/>
+  <path d="M 550 205 Q 620 185 690 205" fill="none" stroke="#b52240" stroke-width="2"/>
+  <circle cx="400" cy="108" r="10" fill="#c9a84c"/>
+  <rect x="385" y="50" width="30" height="12" fill="#c9a84c" rx="1"/>
+</svg>`;
+ 
+function ModuleHero({ title, subtitle, onBack }) {
+  return (
+    <div>
+      <div style={{ background: "#1e1e1e", borderBottom: "3px solid #8b1a2e", padding: "0 40px", height: 70, display: "flex", alignItems: "center", gap: 18, boxShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>
+        <img src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png" alt="Grupo GV" style={{ height: 52, objectFit: "contain", flexShrink: 0 }} onError={(e) => { e.target.style.display = "none"; }} />
+        <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, transparent, #8b1a2e, transparent)" }} />
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: 2, color: "#f4f4f4", fontFamily: "'Courier New', monospace" }}>PORTAL DE GESTIÓN JURÍDICA</div>
+          <div style={{ fontSize: 10, color: "#b52240", letterSpacing: 2, marginTop: 2, fontFamily: "'Courier New', monospace" }}>GRUPO GV · CHILE</div>
+        </div>
+        <button onClick={onBack} style={{ marginLeft: "auto", background: "rgba(139,26,46,0.1)", border: "1px solid #8b1a2e", borderRadius: 4, padding: "6px 16px", fontSize: 11, color: "#b52240", fontWeight: 700, cursor: "pointer", fontFamily: "'Courier New', monospace", letterSpacing: 1 }}>← Volver al Portal</button>
+      </div>
+      <div style={{ position: "relative", background: "#1e1e1e", height: 180, overflow: "hidden", display: "flex", alignItems: "center" }}>
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 60 }} dangerouslySetInnerHTML={{ __html: BALANCE_SVG_PAGE }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, #1e1e1e 40%, transparent 70%, #1e1e1e 95%)" }} />
+        <div style={{ position: "relative", zIndex: 2, padding: "0 48px" }}>
+          <div style={{ fontSize: 10, color: "#b52240", letterSpacing: 4, fontWeight: 700, marginBottom: 8, fontFamily: "'Courier New', monospace" }}>PORTAL DE GESTIÓN JURÍDICA · GRUPO GV</div>
+          <div style={{ fontSize: 26, fontWeight: 700, color: "#f4f4f4", fontFamily: "Georgia, serif", marginBottom: 4 }}>{title}</div>
+          <div style={{ fontSize: 11, color: "#aaaaaa", fontFamily: "'Courier New', monospace", letterSpacing: 1 }}>{subtitle}</div>
+          <div style={{ marginTop: 12, width: 40, height: 2, background: "#8b1a2e" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+ 
+// ── REGISTRO DE ACTIVIDAD ─────────────────────────────────────────────────────
+async function registrarActividad(tipo, cliente, rut, abogado, monto) {
+  try {
+    await fetch("/api/registros", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo, cliente, rut, abogado, monto }),
+    });
+  } catch {}
+}
+ 
+// ── PRESCRIPCION MODULE ───────────────────────────────────────────────────────
+const FOLIOS_EJEMPLO = [];
+const STEPS = ["1. Demandante", "2. Abogado", "3. Folios", "4. Vista Previa"];
+ 
+function Prescripcion({ onBack }) {
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState({
+    empresa: "", rutEmpresa: "", representante: "", cargoRepresentante: "gerente general",
+    rutRepresentante: "", domicilioEmpresa: "", abogado: "", rutAbogado: "",
+    domicilioAbogado: "", emailAbogado: "", fechaCertificado: "", expedientes: "",
+  });
+  const [folios, setFolios] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [extracting, setExtracting] = useState(false);
+  const [extractError, setExtractError] = useState("");
+  const [fileName, setFileName] = useState("");
+ 
+  const totalDeuda = folios.reduce((s, f) => s + (parseFloat(f.total) || 0), 0);
+  const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+ 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setFileName(file.name);
+    setExtracting(true);
+    setExtractError("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/extraer-folios", { method: "POST", body: formData });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Error desconocido");
+      if (!Array.isArray(data.folios) || data.folios.length === 0) throw new Error("No se encontraron folios");
+      setFolios(data.folios);
+    } catch (err) {
+      setExtractError(err.message || "No se pudieron extraer los folios.");
+    } finally {
+      setExtracting(false);
+    }
+  };
+ 
+  const handleGenerar = async () => {
+    setLoading(true); setError("");
+    try {
+      const res = await fetch("/api/generar-demanda", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ form, folios, totalDeuda }) });
+      if (!res.ok) throw new Error("Error");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `Demanda_Prescripcion_${form.empresa.replace(/\s+/g, "_")}.docx`; a.click();
+      URL.revokeObjectURL(url);
+      await registrarActividad("Prescripción", form.empresa, form.rutEmpresa, form.abogado, totalDeuda);
+    } catch { setError("Hubo un error generando el documento. Intenta nuevamente."); }
+    finally { setLoading(false); }
+  };
+ 
+  const Field = ({ label, k, placeholder, full }) => (
+    <div style={{ gridColumn: full ? "1 / -1" : "span 1" }}>
+      <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase", fontFamily: "'Courier New', monospace" }}>{label}</div>
+      <input style={{ width: "100%", background: "#ffffff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "9px 12px", color: C.text, fontFamily: "'Courier New', monospace", fontSize: 13, boxSizing: "border-box" }}
+        value={form[k]} onChange={(e) => set(k, e.target.value)} placeholder={placeholder || ""} />
+    </div>
+  );
+ 
+  const Box = ({ children }) => (
+    <div style={{ background: C.surface, border: `1px solid #ddd`, borderLeft: `4px solid #8b1a2e`, borderRadius: 4, padding: 28, marginBottom: 20, boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+      {children}
+    </div>
+  );
+ 
+  const SectionTitle = ({ children }) => (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#8b1a2e", letterSpacing: 1.5, textTransform: "uppercase", fontFamily: "'Courier New', monospace" }}>{children}</div>
+      <div style={{ width: 30, height: 2, background: "#8b1a2e", marginTop: 6 }} />
+    </div>
+  );
+ 
+  return (
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Courier New', monospace", color: C.text }}>
+      <div style={{ background: "#1e1e1e", borderBottom: "3px solid #8b1a2e", padding: "0 40px", height: 70, display: "flex", alignItems: "center", gap: 18 }}>
+        <img src="https://raw.githubusercontent.com/Rodrigo-Riquelme-Saavedra/prescripcion-v2/main/public/PaginaWeb.png" alt="Grupo GV" style={{ height: 52, objectFit: "contain", flexShrink: 0 }} onError={(e) => { e.target.style.display = "none"; }} />
+        <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, transparent, #8b1a2e, transparent)" }} />
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: 2, color: "#f4f4f4", fontFamily: "'Courier New', monospace" }}>PORTAL DE GESTIÓN JURÍDICA</div>
+          <div style={{ fontSize: 10, color: "#b52240", letterSpacing: 2, marginTop: 2, fontFamily: "'Courier New', monospace" }}>GRUPO GV · CHILE</div>
+        </div>
+        <button onClick={onBack} style={{ marginLeft: "auto", background: "rgba(139,26,46,0.1)", border: "1px solid #8b1a2e", borderRadius: 4, padding: "6px 16px", fontSize: 11, color: "#b52240", fontWeight: 700, cursor: "pointer", fontFamily: "'Courier New', monospace", letterSpacing: 1 }}>← Volver al Portal</button>
+      </div>
+      <div style={{ position: "relative", background: "#1e1e1e", height: 180, overflow: "hidden", display: "flex", alignItems: "center" }}>
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 60 }} dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.12">
+  <line x1="400" y1="60" x2="400" y2="280" stroke="#e8eaf0" stroke-width="4"/>
+  <rect x="388" y="270" width="24" height="60" fill="#c8ccd8" rx="2"/>
+  <rect x="340" y="320" width="120" height="10" fill="#e8eaf0" rx="2"/>
+  <rect x="310" y="330" width="180" height="8" fill="#c8ccd8" rx="2"/>
+  <line x1="200" y1="110" x2="600" y2="110" stroke="#e8eaf0" stroke-width="3"/>
+  <rect x="396" y="56" width="8" height="8" fill="#c9a84c" rx="1"/>
+  <line x1="200" y1="110" x2="180" y2="200" stroke="#c8ccd8" stroke-width="2"/>
+  <line x1="600" y1="110" x2="620" y2="200" stroke="#c8ccd8" stroke-width="2"/>
+  <ellipse cx="180" cy="220" rx="70" ry="25" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+  <path d="M 110 200 Q 180 180 250 200" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+  <ellipse cx="620" cy="225" rx="70" ry="25" fill="none" stroke="#b52240" stroke-width="2"/>
+  <path d="M 550 205 Q 620 185 690 205" fill="none" stroke="#b52240" stroke-width="2"/>
+  <circle cx="400" cy="108" r="10" fill="#c9a84c"/>
+  <rect x="385" y="50" width="30" height="12" fill="#c9a84c" rx="1"/>
+</svg>` }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, #1e1e1e 40%, transparent 70%, #1e1e1e 95%)" }} />
+        <div style={{ position: "relative", zIndex: 2, padding: "0 48px" }}>
+          <div style={{ fontSize: 10, color: "#b52240", letterSpacing: 4, fontWeight: 700, marginBottom: 8, fontFamily: "'Courier New', monospace" }}>PORTAL DE GESTIÓN JURÍDICA · GRUPO GV</div>
+          <div style={{ fontSize: 26, fontWeight: 700, color: "#f4f4f4", fontFamily: "Georgia, serif", marginBottom: 4 }}>Sistema de Prescripción</div>
+          <div style={{ fontSize: 11, color: "#aaaaaa", fontFamily: "'Courier New', monospace", letterSpacing: 1 }}>Prescripción Extintiva Tributaria · Art. 201 Código Tributario</div>
+          <div style={{ marginTop: 12, width: 40, height: 2, background: "#8b1a2e" }} />
+        </div>
+      </div>
+ 
+      <div style={{ maxWidth: 880, margin: "0 auto", padding: "32px 20px" }}>
+        <div style={{ display: "flex", marginBottom: 28, border: "1px solid #ddd", borderRadius: 4, overflow: "hidden" }}>
+          {STEPS.map((s, i) => (
+            <button key={s} onClick={() => i <= step && setStep(i)}
+              style={{ flex: 1, padding: "11px 0", background: i === step ? "#8b1a2e" : i < step ? "#f0e8e8" : "#ffffff", border: "none", borderRight: i < 3 ? "1px solid #ddd" : "none", color: i === step ? "#fff" : i < step ? "#8b1a2e" : "#888", fontFamily: "inherit", fontSize: 11, fontWeight: 700, letterSpacing: 1, cursor: i <= step ? "pointer" : "default" }}>
+              {i < step ? "✓ " : ""}{s}
+            </button>
+          ))}
+        </div>
+ 
+        {step === 0 && (
+          <Box>
+            <SectionTitle>Datos del Demandante</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
+              <Field label="Razón Social / Nombre completo" k="empresa" full />
+              <Field label="RUT Empresa" k="rutEmpresa" placeholder="77.453.510-1" />
+              <Field label="Representante Legal" k="representante" />
+              <Field label="Cargo del Representante" k="cargoRepresentante" />
+              <Field label="RUT Representante" k="rutRepresentante" />
+              <Field label="Domicilio" k="domicilioEmpresa" full />
+            </div>
+            <BtnPrimary onClick={() => setStep(1)}>Siguiente: Abogado →</BtnPrimary>
+          </Box>
+        )}
+ 
+        {step === 1 && (
+          <Box>
+            <SectionTitle>Datos del Abogado Patrocinante</SectionTitle>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
+              <Field label="Nombre Abogado" k="abogado" />
+              <Field label="RUT Abogado" k="rutAbogado" />
+              <Field label="Domicilio Profesional" k="domicilioAbogado" full />
+              <Field label="Correo Electrónico" k="emailAbogado" />
+              <Field label="Fecha del Certificado de Deuda" k="fechaCertificado" placeholder="15-12-2025" />
+              <Field label="N° Expediente(s)" k="expedientes" placeholder="Opcional" full />
+            </div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <BtnSecondary onClick={() => setStep(0)}>← Volver</BtnSecondary>
+              <BtnPrimary onClick={() => setStep(2)}>Siguiente: Folios →</BtnPrimary>
+            </div>
+          </Box>
+        )}
+ 
+        {step === 2 && (
+          <Box>
+            <SectionTitle>Certificado de Deuda — Carga de Folios</SectionTitle>
+            {!extracting && folios.length === 0 && (
+              <div>
+                <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.7 }}>
+                  Sube el <strong>Certificado de Deuda emitido por la TGR</strong> (PDF o Excel). El sistema extraerá automáticamente todos los folios, fechas y montos.
+                </p>
+                <label style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: `2px dashed #c8b8a2`, borderRadius: 4, padding: "40px 24px", cursor: "pointer", background: "#fafaf8" }}>
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>📄</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: C.muted, marginBottom: 6 }}>Arrastra aquí o haz clic para subir</div>
+                  <div style={{ fontSize: 11, color: "#8b1a2e" }}>Certificado TGR en formato PDF o Excel (.xlsx)</div>
+                  <input type="file" accept=".pdf,.xlsx,.xls" onChange={handleFileUpload} style={{ display: "none" }} />
+                </label>
+                {extractError && <div style={{ marginTop: 16, background: "#fef2f2", border: "1px solid #c0392b", borderRadius: 4, padding: "12px 16px", color: "#c0392b", fontSize: 12 }}>⚠ {extractError}</div>}
+              </div>
+            )}
+            {extracting && (
+              <div style={{ textAlign: "center", padding: "48px 0" }}>
+                <div style={{ fontSize: 40, marginBottom: 16 }}>🤖</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Analizando certificado...</div>
+                <div style={{ fontSize: 12, color: "#8b1a2e" }}>La IA está extrayendo los folios y montos del documento</div>
+              </div>
+            )}
+            {!extracting && folios.length > 0 && (
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, background: "#f0f7f0", border: "1px solid #27ae60", borderRadius: 4, padding: "10px 16px" }}>
+                  <span>✅</span>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#1a6b2a" }}>{folios.length} folios extraídos · {fileName}</div>
+                  <button onClick={() => { setFolios([]); setFileName(""); }} style={{ marginLeft: "auto", background: "none", border: "1px solid #27ae60", borderRadius: 4, padding: "3px 10px", fontSize: 11, color: "#27ae60", cursor: "pointer", fontFamily: "inherit" }}>Cambiar archivo</button>
+                </div>
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                    <thead>
+                      <tr style={{ background: "#f0f0f0" }}>
+                        {["Folio", "Fecha Vcto.", "Deuda Neta", "Reajuste", "Interés", "Multa", "Total"].map(h => (
+                          <th key={h} style={{ padding: "8px 10px", color: "#555", fontSize: 10, fontWeight: 700, borderBottom: "1px solid #ddd", textAlign: "right" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {folios.map((f, i) => (
+                        <tr key={i} style={{ borderBottom: "1px solid #eee", background: i % 2 === 0 ? "#fff" : "#fafaf8" }}>
+                          <td style={{ padding: "6px 10px", textAlign: "left", fontWeight: 600 }}>{f.folio}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right" }}>{f.fechaVcto}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right" }}>$ {fmt(f.deudaNeta)}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right" }}>$ {fmt(f.reajuste)}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right" }}>$ {fmt(f.interes)}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right" }}>$ {fmt(f.multa)}</td>
+                          <td style={{ padding: "6px 10px", textAlign: "right", fontWeight: 700, color: "#8b1a2e" }}>$ {fmt(f.total)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr style={{ background: "#f0f0f0", fontWeight: 700 }}>
+                        <td colSpan={6} style={{ padding: "8px 10px", textAlign: "right", color: "#555" }}>TOTAL DEUDA MOROSA</td>
+                        <td style={{ padding: "8px 10px", textAlign: "right", color: "#8b1a2e", fontSize: 14 }}>$ {fmt(totalDeuda)}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            )}
+            <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
+              <BtnSecondary onClick={() => setStep(1)}>← Volver</BtnSecondary>
+              <button onClick={() => setStep(3)} disabled={folios.length === 0}
+                style={{ flex: 1, background: folios.length === 0 ? "#eee" : "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: folios.length === 0 ? "#999" : "#fff", borderRadius: 4, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: folios.length === 0 ? "default" : "pointer" }}>
+                {folios.length === 0 ? "Sube el certificado para continuar" : "Vista Previa →"}
+              </button>
+            </div>
+          </Box>
+        )}
+ 
+        {step === 3 && (
+          <Box>
+            <SectionTitle>Vista Previa — Texto de la Demanda</SectionTitle>
+            <div style={{ background: "#fafaf8", border: "1px solid #ddd", borderRadius: 4, padding: "24px 28px", fontSize: 12, lineHeight: 2, marginBottom: 20, maxHeight: 500, overflowY: "auto", fontFamily: "Georgia, serif", color: "#1e1e1e" }}>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 4, fontSize: 13 }}>EN LO PRINCIPAL: DEMANDA DE DECLARACIÓN DE PRESCRIPCIÓN EXTINTIVA;</p>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 20, fontSize: 13 }}>PRIMER OTROSÍ: ACOMPAÑA DOCUMENTO; SEGUNDO OTROSÍ: PATROCINIO Y PODER.</p>
+              <p style={{ textAlign: "center", fontWeight: 700, marginBottom: 20 }}>S. J. L.</p>
+              <p style={{ textAlign: "justify", marginBottom: 14 }}>
+                <strong>{form.empresa}</strong>, RUT n° <strong>{form.rutEmpresa}</strong>, representada legalmente por don <strong>{form.representante}</strong>, {form.cargoRepresentante}, RUT <strong>{form.rutRepresentante}</strong>, domiciliados en {form.domicilioEmpresa}, a S.S., respetuosamente digo:
+              </p>
+              <p style={{ textAlign: "justify", marginBottom: 14 }}>
+                Que vengo en demandar al <strong>FISCO – TESORERÍA GENERAL DE LA REPÚBLICA</strong>, con el objeto que se declare la <strong>PRESCRIPCIÓN EXTINTIVA</strong> de la acción de cobro de impuestos, según Certificado de Deuda de fecha <strong>{form.fechaCertificado}</strong>.
+              </p>
+              <p style={{ textAlign: "justify", marginBottom: 14 }}><strong>Folios:</strong> {folios.map(f => f.folio).filter(Boolean).join(", ")}</p>
+              <p style={{ textAlign: "justify", marginBottom: 14 }}>Total deuda: <strong style={{ color: "#8b1a2e" }}>$ {fmt(totalDeuda)}</strong></p>
+              <p style={{ color: "#999", fontStyle: "italic", marginBottom: 14 }}>[... texto legal completo según plantilla Art. 201 C.T. ...]</p>
+              <p style={{ textAlign: "justify" }}>Abogado patrocinante: <strong>{form.abogado}</strong>, RUT {form.rutAbogado} — {form.domicilioAbogado} — {form.emailAbogado}</p>
+            </div>
+            {error && <div style={{ background: "#fef2f2", border: "1px solid #c0392b", borderRadius: 4, padding: "10px 16px", color: "#c0392b", fontSize: 12, marginBottom: 14 }}>⚠ {error}</div>}
+            <div style={{ display: "flex", gap: 10 }}>
+              <BtnSecondary onClick={() => setStep(2)}>← Editar</BtnSecondary>
+              <button onClick={handleGenerar} disabled={loading}
+                style={{ flex: 1, background: loading ? "#eee" : "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: loading ? "#999" : "#fff", borderRadius: 4, padding: "13px 24px", fontFamily: "inherit", fontSize: 13, fontWeight: 700, letterSpacing: 2, cursor: loading ? "wait" : "pointer" }}>
+                {loading ? "⏳ GENERANDO..." : "⬇ GENERAR Y DESCARGAR DEMANDA .DOCX"}
+              </button>
+            </div>
+          </Box>
+        )}
+      </div>
+    </div>
+  );
+}
+ 
+const BtnPrimary = ({ onClick, children }) => (
+  <button onClick={onClick} style={{ flex: 1, background: "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: "#fff", borderRadius: 4, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: "pointer" }}>{children}</button>
+);
+ 
+const BtnSecondary = ({ onClick, children }) => (
+  <button onClick={onClick} style={{ background: "#f4f4f4", border: "1px solid #ddd", color: "#1e1e1e", borderRadius: 4, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, cursor: "pointer" }}>{children}</button>
+);
