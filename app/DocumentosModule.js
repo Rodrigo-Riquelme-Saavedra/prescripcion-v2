@@ -174,7 +174,7 @@ function CategoriaView({ categoria, onBack, onContrato }) {
         {/* Contracts */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           {categoria.contratos.map(contrato => (
-            <ContratoCard key={contrato.id} contrato={contrato} color={categoria.color} />
+            <ContratoCard key={contrato.id} contrato={contrato} color={categoria.color} onSelect={onContrato} />
           ))}
         </div>
  
