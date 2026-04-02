@@ -93,6 +93,17 @@ const CATEGORIAS = [
       { id: "declaracion-jurada-notarial", nombre: "Declaraciones Juradas", desc: "Declaraciones juradas simples o notariales", activo: false },
     ],
   },
+  {
+    id: "mandatos",
+    icon: "✍️",
+    titulo: "Mandatos",
+    color: "#b45309",
+    contratos: [
+      { id: "mandato-judicial-juridica", nombre: "Mandato Judicial — Persona Jurídica", desc: "Poder para representar judicialmente a una empresa o sociedad", activo: false },
+      { id: "mandato-judicial-natural", nombre: "Mandato Judicial — Persona Natural", desc: "Poder para representar judicialmente a una persona natural", activo: false },
+      { id: "mandato-general", nombre: "Mandato General", desc: "Poder amplio para gestionar intereses del mandante", activo: false },
+    ],
+  },
 ];
  
 function Header({ onBack }) {
