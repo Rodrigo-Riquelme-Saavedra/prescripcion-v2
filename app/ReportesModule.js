@@ -1,3 +1,6 @@
+tesmodule · JS
+Copiar
+
 "use client";
 import { useState, useEffect } from "react";
  
@@ -325,7 +328,5 @@ function Dashboard({ onBack }) {
  
 // ── EXPORT ────────────────────────────────────────────────────────────────────
 export default function ReportesModule({ onBack }) {
-  const [autenticado, setAutenticado] = useState(false);
-  if (!autenticado) return <LoginPanel onLogin={() => setAutenticado(true)} onBack={onBack} />;
   return <Dashboard onBack={onBack} />;
 }
