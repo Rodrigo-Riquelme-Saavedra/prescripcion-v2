@@ -55,6 +55,43 @@ const CATEGORIAS = [
       { id: "anexo-contrato", nombre: "Anexo de Contrato", desc: "Modificación o complemento del contrato de trabajo", activo: false },
     ],
   },
+  {
+    id: "familia",
+    icon: "👨‍👩‍👧",
+    titulo: "Actos de Familia",
+    color: "#db2777",
+    contratos: [
+      { id: "autorizacion-viaje", nombre: "Autorización de Viaje de Menores", desc: "Permiso notarial para viaje de menores al extranjero", activo: false },
+      { id: "declaracion-jurada-familia", nombre: "Declaraciones Juradas", desc: "Declaraciones juradas en materia de familia", activo: false },
+      { id: "pension-alimenticia", nombre: "Acuerdo de Pensión Alimenticia", desc: "Acuerdo extrajudicial de alimentos", activo: false },
+    ],
+  },
+  {
+    id: "societarios",
+    icon: "🏢",
+    titulo: "Contratos Societarios y Comerciales",
+    color: "#0369a1",
+    contratos: [
+      { id: "constitucion-sociedad", nombre: "Constitución de Sociedad", desc: "Escritura de constitución de sociedad", activo: false },
+      { id: "modificacion-sociedad", nombre: "Modificación de Sociedad", desc: "Cambios en estatutos o socios", activo: false },
+      { id: "cesion-derechos", nombre: "Cesión de Derechos Sociales", desc: "Traspaso de participación social", activo: false },
+      { id: "contrato-accionistas", nombre: "Contrato de Accionistas", desc: "Acuerdo entre socios o accionistas", activo: false },
+      { id: "acta-junta", nombre: "Actas de Juntas", desc: "Actas de juntas ordinarias o extraordinarias", activo: false },
+    ],
+  },
+  {
+    id: "notariales",
+    icon: "📋",
+    titulo: "Otros Documentos Notariales",
+    color: "#7c3aed",
+    contratos: [
+      { id: "poder-simple", nombre: "Poder Simple", desc: "Mandato sin necesidad de escritura pública", activo: false },
+      { id: "poder-notarial", nombre: "Poder Notarial", desc: "Poder general o especial ante notario", activo: false },
+      { id: "testamento", nombre: "Testamento", desc: "Testamento por escritura pública", activo: false },
+      { id: "protocolizacion", nombre: "Protocolización de Documentos", desc: "Incorporación de documentos al registro notarial", activo: false },
+      { id: "declaracion-jurada-notarial", nombre: "Declaraciones Juradas", desc: "Declaraciones juradas simples o notariales", activo: false },
+    ],
+  },
 ];
  
 function Header({ onBack }) {
@@ -146,7 +183,7 @@ export default function DocumentosModule({ onBack }) {
         </div>
  
         {/* Stats bar */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 32 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 32 }}>
           {CATEGORIAS.map(cat => (
             <div key={cat.id} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 16px", display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ fontSize: 22 }}>{cat.icon}</div>
