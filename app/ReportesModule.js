@@ -21,12 +21,18 @@ const TIPO_COLORS = {
   "Prescripción": "#bf00ff",
   "Mutuo A la Vista": "#3b82f6",
   "Mutuo en Cuotas": "#10b981",
+  "Mandato Judicial — Persona Jurídica": "#b45309",
+  "Mandato Judicial — Persona Natural": "#d97706",
+  "Mandato General": "#f59e0b",
 };
  
 const TIPO_ICONS = {
   "Prescripción": "⚖",
   "Mutuo A la Vista": "🤝",
   "Mutuo en Cuotas": "📅",
+  "Mandato Judicial — Persona Jurídica": "✍️",
+  "Mandato Judicial — Persona Natural": "✍️",
+  "Mandato General": "📜",
 };
  
 function Header({ onBack }) {
@@ -194,13 +200,14 @@ function Dashboard({ onBack }) {
     cargar();
   }, []);
  
-  const tipos = ["Todos", "Prescripción", "Mutuo A la Vista", "Mutuo en Cuotas"];
+  const tipos = ["Todos", "Prescripción", "Mutuo A la Vista", "Mutuo en Cuotas", "Mandato Judicial — Persona Jurídica", "Mandato Judicial — Persona Natural", "Mandato General"];
   const filtrados = filtroTipo === "Todos" ? registros : registros.filter(r => r.tipo === filtroTipo);
  
   const conteos = {
     "Prescripción": registros.filter(r => r.tipo === "Prescripción").length,
     "Mutuo A la Vista": registros.filter(r => r.tipo === "Mutuo A la Vista").length,
     "Mutuo en Cuotas": registros.filter(r => r.tipo === "Mutuo en Cuotas").length,
+    "Mandatos": registros.filter(r => r.tipo && r.tipo.startsWith("Mandato")).length,
   };
  
   // Group by date for line chart
@@ -231,9 +238,10 @@ function Dashboard({ onBack }) {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 28 }}>
           {[
             { label: "Total Documentos", value: registros.length, color: C.record, icon: "📋" },
-            { label: "Prescripciones", value: conteos["Prescripción"], color: "#bf00ff", icon: "⚖" },
+            { label: "Prescripciones", value: conteos["Prescripción"], color: "#8b1a2e", icon: "⚖" },
             { label: "Mutuos Vista", value: conteos["Mutuo A la Vista"], color: "#3b82f6", icon: "🤝" },
             { label: "Mutuos Cuotas", value: conteos["Mutuo en Cuotas"], color: "#10b981", icon: "📅" },
+            { label: "Mandatos", value: conteos["Mandatos"], color: "#b45309", icon: "✍️" },
           ].map((kpi, i) => (
             <div key={i} style={{ background: C.surface, border: `2px solid ${C.border}`, borderRadius: 12, padding: "20px 18px", boxShadow: "0 2px 12px rgba(168,85,247,0.08)" }}>
               <div style={{ fontSize: 24, marginBottom: 8 }}>{kpi.icon}</div>
@@ -251,6 +259,7 @@ function Dashboard({ onBack }) {
               { label: "Prescripción", value: conteos["Prescripción"], color: "#bf00ff" },
               { label: "Mutuo Vista", value: conteos["Mutuo A la Vista"], color: "#3b82f6" },
               { label: "Mutuo Cuotas", value: conteos["Mutuo en Cuotas"], color: "#10b981" },
+              { label: "Mandatos", value: conteos["Mandatos"], color: "#b45309" },
             ]} />
           </div>
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
@@ -259,6 +268,7 @@ function Dashboard({ onBack }) {
               { label: "Prescripción", value: conteos["Prescripción"], color: "#bf00ff" },
               { label: "Mutuo Vista", value: conteos["Mutuo A la Vista"], color: "#3b82f6" },
               { label: "Mutuo Cuotas", value: conteos["Mutuo en Cuotas"], color: "#10b981" },
+              { label: "Mandatos", value: conteos["Mandatos"], color: "#b45309" },
             ]} />
           </div>
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
