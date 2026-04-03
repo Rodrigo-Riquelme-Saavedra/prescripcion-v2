@@ -185,3 +185,4 @@ export default function DocumentosModule({ onBack, onMandato }) {
       </div>
     </NavContext.Provider>
   );
+}
