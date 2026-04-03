@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ModuleHero from "./ModuleHero";
+import RutField from "./RutField";
  
 const C = {
   bg: "#f4f4f4", surface: "#ffffff", border: "#c8b8a2",
@@ -101,14 +102,14 @@ function MandatoJuridicaForm({ onBack }) {
           <SectionTitle>Representante 1</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}>
             <Field label="Nombre completo" k="nombreRep1" form={form} set={set} full />
-            <Field label="RUT" k="rutRep1" form={form} set={set} />
+            <RutField label="RUT" value={form.rutRep1} onChange={(v) => set("rutRep1", v)} />
             <SelectField label="Estado Civil" k="estadoCivilRep1" form={form} set={set} options={ESTADOS} />
             <Field label="Profesión" k="profesionRep1" form={form} set={set} placeholder="empresaria" />
           </div>
           <SectionTitle>Representante 2</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}>
             <Field label="Nombre completo" k="nombreRep2" form={form} set={set} full />
-            <Field label="RUT" k="rutRep2" form={form} set={set} />
+            <RutField label="RUT" value={form.rutRep2} onChange={(v) => set("rutRep2", v)} />
             <SelectField label="Estado Civil" k="estadoCivilRep2" form={form} set={set} options={ESTADOS} />
             <Field label="Profesión" k="profesionRep2" form={form} set={set} placeholder="empresaria" />
           </div>
@@ -127,7 +128,7 @@ function MandatoJuridicaForm({ onBack }) {
           <SectionTitle>Datos del Abogado</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
             <Field label="Nombre completo" k="nombreAbogado" form={form} set={set} full />
-            <Field label="RUT" k="rutAbogado" form={form} set={set} placeholder="10.011.754-1" />
+            <RutField label="RUT" value={form.rutAbogado} onChange={(v) => set("rutAbogado", v)} />
             <Field label="Domicilio profesional" k="domicilioAbogado" form={form} set={set} placeholder="Huérfanos 979 of. 606, Santiago" full />
           </div>
           <div style={{ display: "flex", gap: 10 }}><BtnSecondary onClick={() => setStep(1)}>← Volver</BtnSecondary><BtnPrimary onClick={() => setStep(3)}>Siguiente: Notaría →</BtnPrimary></div>
@@ -190,7 +191,7 @@ function MandatoNaturalForm({ onBack }) {
           <SectionTitle>Datos del Mandante</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
             <Field label="Nombre completo" k="nombreMandante" form={form} set={set} full />
-            <Field label="RUT" k="rutMandante" form={form} set={set} placeholder="5.897.630-K" />
+            <RutField label="RUT" value={form.rutMandante} onChange={(v) => set("rutMandante", v)} />
             <SelectField label="Estado Civil" k="estadoCivilMandante" form={form} set={set} options={ESTADOS} />
             <Field label="Profesión" k="profesionMandante" form={form} set={set} placeholder="empresario" />
             <Field label="Domicilio" k="domicilioMandante" form={form} set={set} placeholder="Recreo 625, Rancagua" full />
@@ -203,7 +204,7 @@ function MandatoNaturalForm({ onBack }) {
           <SectionTitle>Datos del Abogado</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
             <Field label="Nombre completo" k="nombreAbogado" form={form} set={set} full />
-            <Field label="RUT" k="rutAbogado" form={form} set={set} placeholder="10.011.754-1" />
+            <RutField label="RUT" value={form.rutAbogado} onChange={(v) => set("rutAbogado", v)} />
             <Field label="Domicilio profesional" k="domicilioAbogado" form={form} set={set} placeholder="Huérfanos 979 of. 606, Santiago" full />
           </div>
           <div style={{ display: "flex", gap: 10 }}><BtnSecondary onClick={() => setStep(0)}>← Volver</BtnSecondary><BtnPrimary onClick={() => setStep(2)}>Vista Previa →</BtnPrimary></div>
@@ -258,7 +259,7 @@ function MandatoGeneralForm({ onBack }) {
           <SectionTitle>Datos del Mandante</SectionTitle>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
             <Field label="Nombre completo" k="nombreMandante" form={form} set={set} full />
-            <Field label="RUT" k="rutMandante" form={form} set={set} placeholder="4.365.135-8" />
+            <RutField label="RUT" value={form.rutMandante} onChange={(v) => set("rutMandante", v)} />
             <SelectField label="Estado Civil" k="estadoCivilMandante" form={form} set={set} options={ESTADOS} />
             <Field label="Profesión" k="profesionMandante" form={form} set={set} placeholder="comerciante" />
             <Field label="Domicilio" k="domicilioMandante" form={form} set={set} placeholder="Santo Domingo 5023, Quinta Normal, RM" full />
