@@ -5,6 +5,7 @@ import MutuoModule from "./MutuoModule";
 import ReportesModule from "./ReportesModule";
 import DocumentosModule from "./DocumentosModule";
 import MandatosModule from "./MandatosModule";
+import ConfiguracionModule from "./ConfiguracionModule";
  
 const C = {
   bg: "#f4f4f4", surface: "#ffffff", border: "#c8b8a2",
@@ -20,7 +21,7 @@ const MODULES = [
   { id: "documentos", icon: "📄", title: "Documentos Legales", desc: "Contratos de compraventa, arriendo, civiles y laborales. 15 tipos de documentos.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
   { id: "clientes", icon: "👥", title: "Gestión de Clientes", desc: "Administración de clientes, casos y seguimiento de expedientes.", tag: "PRÓXIMAMENTE", available: false, comingSoon: false, color: "#999" },
   { id: "reportes", icon: "📊", title: "Reportes y Estadísticas", desc: "Dashboards, métricas de casos, gráficos y exportación Excel. Acceso solo administrador.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
-  { id: "configuracion", icon: "⚙", title: "Configuración del Sistema", desc: "Parámetros, usuarios y configuración general de la plataforma.", tag: "PRÓXIMAMENTE", available: false, comingSoon: false, color: "#999" },
+  { id: "configuracion", icon: "⚙", title: "Configuración del Sistema", desc: "Gestión de notarías, parámetros y configuración general.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
 ];
  
 const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
@@ -85,6 +86,7 @@ export default function Home() {
   if (currentModule === "prescripcion") return <Prescripcion onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mutuo") return <MutuoModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "reportes") return <ReportesModule onBack={() => setCurrentModule(null)} />;
+  if (currentModule === "configuracion") return <ConfiguracionModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mandatos") return <MandatosModule onBack={() => { setCurrentModule("documentos"); setMandatoTipo(null); }} initialTipo={mandatoTipo} />;
   if (currentModule === "documentos") return <DocumentosModule 
     onBack={() => setCurrentModule(null)} 
