@@ -120,10 +120,13 @@ export default function DocumentosModule({ onBack, onMandato }) {
   const [categoriaActiva, setCategoriaActiva] = useState(null);
  
   const navigate = (destino, data) => {
+    console.log("NAVIGATE:", destino, data, "onMandato:", !!onMandato);
     if (destino === "categoria") { setCategoriaActiva(data); setScreen("categoria"); }
     if (destino === "contrato") {
+      console.log("CONTRATO - is mandato:", MANDATOS_IDS.includes(data), "onMandato exists:", !!onMandato);
       if (MANDATOS_IDS.includes(data) && onMandato) {
         const tipo = data.replace("mandato-", "");
+        console.log("CALLING onMandato with tipo:", tipo);
         onMandato(tipo);
       }
     }
@@ -182,4 +185,3 @@ export default function DocumentosModule({ onBack, onMandato }) {
       </div>
     </NavContext.Provider>
   );
-}
