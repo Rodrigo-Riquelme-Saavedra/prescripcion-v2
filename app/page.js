@@ -79,11 +79,15 @@ function ModuleCard({ mod, onClick }) {
  
 export default function Home() {
   const [currentModule, setCurrentModule] = useState(null);
+  const [mandatoTipo, setMandatoTipo] = useState(null);
  
   if (currentModule === "prescripcion") return <Prescripcion onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mutuo") return <MutuoModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "reportes") return <ReportesModule onBack={() => setCurrentModule(null)} />;
-  if (currentModule === "documentos") return <DocumentosModule onBack={() => setCurrentModule(null)} />;
+  if (currentModule === "documentos") return <DocumentosModule 
+    onBack={() => setCurrentModule(null)} 
+    onMandato={(tipo) => { setMandatoTipo(tipo); setCurrentModule("mandatos"); }}
+  />;
  
   return (
     <div style={{ minHeight: "100vh", background: "#f4f4f4", fontFamily: "Georgia, 'Times New Roman', serif", color: "#1e1e1e" }}>
@@ -458,3 +462,4 @@ const BtnPrimary = ({ onClick, children }) => (
 const BtnSecondary = ({ onClick, children }) => (
   <button onClick={onClick} style={{ background: "#f4f4f4", border: "1px solid #ddd", color: "#1e1e1e", borderRadius: 4, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, cursor: "pointer" }}>{children}</button>
 );
+ 
