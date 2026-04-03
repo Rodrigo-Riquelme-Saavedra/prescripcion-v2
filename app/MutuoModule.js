@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ModuleHero from "./ModuleHero";
+import RutField from "./RutField";
  
 async function registrarActividad(tipo, cliente, rut, monto) {
   try {
@@ -92,7 +93,7 @@ function MutuoVista({ onBack }) {
             <SectionTitle>Datos del Mutuante / Acreedor</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Nombre completo" k="nombreMutuante" form={form} set={set} full />
-              <Field label="RUT" k="rutMutuante" form={form} set={set} placeholder="10.164.051-5" />
+              <RutField label="RUT" value={form.rutMutuante} onChange={(v) => set("rutMutuante", v)} />
               <Field label="Profesión / Ocupación" k="profesionMutuante" form={form} set={set} />
               <Select label="Nacionalidad" k="nacionalidadMutuante" form={form} set={set} options={[{v:"chileno",l:"Chileno"},{v:"chilena",l:"Chilena"},{v:"extranjero",l:"Extranjero"}]} />
               <Select label="Estado Civil" k="estadoCivilMutuante" form={form} set={set} options={[{v:"casado",l:"Casado"},{v:"casada",l:"Casada"},{v:"soltero",l:"Soltero"},{v:"soltera",l:"Soltera"},{v:"divorciado",l:"Divorciado"},{v:"divorciada",l:"Divorciada"},{v:"viudo",l:"Viudo"},{v:"viuda",l:"Viuda"}]} />
@@ -108,7 +109,7 @@ function MutuoVista({ onBack }) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Select label="¿La mutuaria es empresa?" k="esMutuariaEmpresa" form={form} set={set} options={[{v:"no",l:"No, es persona natural"},{v:"si",l:"Sí, es empresa"}]} full />
               <Field label="Nombre completo / Razón Social" k="nombreMutuaria" form={form} set={set} full />
-              <Field label="RUT" k="rutMutuaria" form={form} set={set} placeholder="10.400.124-6" />
+              <RutField label="RUT" value={form.rutMutuaria} onChange={(v) => set("rutMutuaria", v)} />
               {form.esMutuariaEmpresa === "no" && <>
                 <Field label="Profesión / Ocupación" k="profesionMutuaria" form={form} set={set} />
                 <Select label="Nacionalidad" k="nacionalidadMutuaria" form={form} set={set} options={[{v:"chilena",l:"Chilena"},{v:"chileno",l:"Chileno"},{v:"extranjera",l:"Extranjera"}]} />
@@ -116,7 +117,7 @@ function MutuoVista({ onBack }) {
               </>}
               {form.esMutuariaEmpresa === "si" && <>
                 <Field label="Nombre Representante Legal" k="representanteMutuaria" form={form} set={set} />
-                <Field label="RUT Representante" k="rutRepresentanteMutuaria" form={form} set={set} />
+                <RutField label="RUT Representante" value={form.rutRepresentanteMutuaria} onChange={(v) => set("rutRepresentanteMutuaria", v)} />
               </>}
               <Field label="Domicilio" k="domicilioMutuaria" form={form} set={set} full />
             </div>
@@ -216,7 +217,7 @@ function MutuoCuotas({ onBack }) {
             <SectionTitle>Datos del Mutuante / Acreedor</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Nombre completo" k="nombreMutuante" form={form} set={set} full />
-              <Field label="RUT" k="rutMutuante" form={form} set={set} placeholder="9.094.616-1" />
+              <RutField label="RUT" value={form.rutMutuante} onChange={(v) => set("rutMutuante", v)} />
               <Field label="Profesión / Ocupación" k="profesionMutuante" form={form} set={set} />
               <Select label="Nacionalidad" k="nacionalidadMutuante" form={form} set={set} options={[{v:"chileno",l:"Chileno"},{v:"chilena",l:"Chilena"},{v:"extranjero",l:"Extranjero"}]} />
               <Select label="Estado Civil" k="estadoCivilMutuante" form={form} set={set} options={[{v:"casado",l:"Casado"},{v:"casada",l:"Casada"},{v:"soltero",l:"Soltero"},{v:"soltera",l:"Soltera"},{v:"divorciado",l:"Divorciado"},{v:"divorciada",l:"Divorciada"}]} />
@@ -231,13 +232,13 @@ function MutuoCuotas({ onBack }) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Razón Social" k="nombreEmpresaMutuaria" form={form} set={set} full />
               <Field label="Nombre alternativo / fantasia (opcional)" k="nombreAlternativoEmpresa" form={form} set={set} full placeholder="Ej: TINTA MAESTRA SpA" />
-              <Field label="RUT Empresa" k="rutEmpresa" form={form} set={set} placeholder="78.018.021-8" />
+              <RutField label="RUT Empresa" value={form.rutEmpresa} onChange={(v) => set("rutEmpresa", v)} />
               <Field label="Domicilio" k="domicilio" form={form} set={set} full />
               <div style={{ gridColumn: "1 / -1", borderTop: `1px solid ${C.dim}`, paddingTop: 16, marginTop: 4 }}>
                 <div style={{ fontSize: 11, color: C.muted, fontWeight: 700, marginBottom: 12 }}>REPRESENTANTE LEGAL</div>
               </div>
               <Field label="Nombre Representante Legal" k="representanteLegal" form={form} set={set} full />
-              <Field label="RUT Representante" k="rutRepresentante" form={form} set={set} placeholder="10.760.595-9" />
+              <RutField label="RUT Representante" value={form.rutRepresentante} onChange={(v) => set("rutRepresentante", v)} />
               <Field label="Profesión" k="profesionRepresentante" form={form} set={set} />
               <Select label="Género" k="generoRepresentante" form={form} set={set} options={[{v:"F",l:"Femenino (doña)"},{v:"M",l:"Masculino (don)"}]} />
               <Select label="Nacionalidad" k="nacionalidadRepresentante" form={form} set={set} options={[{v:"chilena",l:"Chilena"},{v:"chileno",l:"Chileno"},{v:"extranjera",l:"Extranjera"}]} />
