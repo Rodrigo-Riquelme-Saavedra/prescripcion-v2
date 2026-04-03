@@ -84,6 +84,7 @@ export default function Home() {
   if (currentModule === "prescripcion") return <Prescripcion onBack={() => setCurrentModule(null)} />;
   if (currentModule === "mutuo") return <MutuoModule onBack={() => setCurrentModule(null)} />;
   if (currentModule === "reportes") return <ReportesModule onBack={() => setCurrentModule(null)} />;
+  if (currentModule === "mandatos") return <MandatosModule onBack={() => { setCurrentModule("documentos"); setMandatoTipo(null); }} initialTipo={mandatoTipo} />;
   if (currentModule === "documentos") return <DocumentosModule 
     onBack={() => setCurrentModule(null)} 
     onMandato={(tipo) => { setMandatoTipo(tipo); setCurrentModule("mandatos"); }}
@@ -462,4 +463,3 @@ const BtnPrimary = ({ onClick, children }) => (
 const BtnSecondary = ({ onClick, children }) => (
   <button onClick={onClick} style={{ background: "#f4f4f4", border: "1px solid #ddd", color: "#1e1e1e", borderRadius: 4, padding: "11px 20px", fontFamily: "inherit", fontSize: 12, cursor: "pointer" }}>{children}</button>
 );
- 
