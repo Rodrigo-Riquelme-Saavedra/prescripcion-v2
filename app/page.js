@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import RutField from "./RutField";
 import MutuoModule from "./MutuoModule";
 import ReportesModule from "./ReportesModule";
 import DocumentosModule from "./DocumentosModule";
@@ -322,10 +323,10 @@ function Prescripcion({ onBack }) {
             <SectionTitle>Datos del Demandante</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Razón Social / Nombre completo" k="empresa" full />
-              <Field label="RUT Empresa" k="rutEmpresa" placeholder="77.453.510-1" />
+              <RutField label="RUT Empresa" value={form.rutEmpresa} onChange={(v) => set("rutEmpresa", v)} />
               <Field label="Representante Legal" k="representante" />
               <Field label="Cargo del Representante" k="cargoRepresentante" />
-              <Field label="RUT Representante" k="rutRepresentante" />
+              <RutField label="RUT Representante" value={form.rutRepresentante} onChange={(v) => set("rutRepresentante", v)} />
               <Field label="Domicilio" k="domicilioEmpresa" full />
             </div>
             <BtnPrimary onClick={() => setStep(1)}>Siguiente: Abogado →</BtnPrimary>
@@ -337,7 +338,7 @@ function Prescripcion({ onBack }) {
             <SectionTitle>Datos del Abogado Patrocinante</SectionTitle>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
               <Field label="Nombre Abogado" k="abogado" />
-              <Field label="RUT Abogado" k="rutAbogado" />
+              <RutField label="RUT Abogado" value={form.rutAbogado} onChange={(v) => set("rutAbogado", v)} />
               <Field label="Domicilio Profesional" k="domicilioAbogado" full />
               <Field label="Correo Electrónico" k="emailAbogado" />
               <Field label="Fecha del Certificado de Deuda" k="fechaCertificado" placeholder="15-12-2025" />
