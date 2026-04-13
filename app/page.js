@@ -16,12 +16,12 @@ const C = {
 const fmt = (n) => Number(n || 0).toLocaleString("es-CL");
  
 const MODULES = [
-  { id: "prescripcion", icon: "⚖", title: "Sistema de Prescripción", desc: "Generador de demandas de prescripción extintiva tributaria. Art. 201 Código Tributario.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
-  { id: "mutuo", icon: "🤝", title: "Contrato Mutuo", desc: "Generador de contratos de mutuo. Incluye modalidad A la Vista y en Cuotas con todos sus campos.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
-  { id: "documentos", icon: "📄", title: "Documentos Legales", desc: "Contratos de compraventa, arriendo, civiles y laborales. 15 tipos de documentos.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
-  { id: "clientes", icon: "👥", title: "Gestión de Clientes", desc: "Administración de clientes, casos y seguimiento de expedientes.", tag: "PRÓXIMAMENTE", available: false, comingSoon: false, color: "#999" },
-  { id: "reportes", icon: "📊", title: "Reportes y Estadísticas", desc: "Dashboards, métricas de casos, gráficos y exportación Excel. Acceso solo administrador.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
-  { id: "configuracion", icon: "⚙", title: "Configuración del Sistema", desc: "Gestión de notarías, parámetros y configuración general.", tag: "ACTIVO", available: true, comingSoon: false, color: "#8b1a2e" },
+  { id: "prescripcion",  icon: "⚖",  title: "Sistema de Prescripción",   desc: "Generador de demandas de prescripción extintiva tributaria. Art. 201 Código Tributario.",  tag: "ACTIVO",        available: true,  comingSoon: false, color: "#8b1a2e" },
+  { id: "mutuo",         icon: "🤝", title: "Contrato Mutuo",             desc: "Generador de contratos de mutuo. Incluye modalidad A la Vista y en Cuotas con todos sus campos.", tag: "ACTIVO",    available: true,  comingSoon: false, color: "#8b1a2e" },
+  { id: "documentos",    icon: "📄", title: "Documentos Legales",         desc: "Mandatos judiciales, generales y contratos. Biblioteca completa de documentos legales.",        tag: "ACTIVO",        available: true,  comingSoon: false, color: "#8b1a2e" },
+  { id: "reportes",      icon: "📊", title: "Reportes y Estadísticas",    desc: "Dashboards, métricas de casos, gráficos y exportación de datos.", tag: "ACTIVO",                                       available: true,  comingSoon: false, color: "#8b1a2e" },
+  { id: "configuracion", icon: "⚙", title: "Configuración del Sistema",  desc: "Gestión de usuarios, notarías, abogados y parámetros del sistema.",                             tag: "ACTIVO",        available: true,  comingSoon: false, color: "#8b1a2e" },
+  { id: "clientes",      icon: "👥", title: "Gestión de Clientes",        desc: "Administración de clientes, casos y seguimiento de expedientes.",                               tag: "PRÓXIMAMENTE",  available: false, comingSoon: true,  color: "#999" },
 ];
  
 const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
@@ -105,8 +105,8 @@ function LoginModal({ perfil, onSuccess, onCancel }) {
     }
   };
  
-  const iconos = { abogado: "⚖", notaria: "📋" };
-  const nombres = { abogado: "Abogados", notaria: "Notaría" };
+  const iconos = { abogado: "⚖", notaria: "📋", cliente: "👤", estudio: "🏛", admin: "⚙" };
+  const nombres = { abogado: "Abogados", notaria: "Notaría", cliente: "Cliente / Usuario", estudio: "Estudio Jurídico", admin: "Configuración del Sistema" };
  
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -182,6 +182,15 @@ const PERFILES = [
     requiereLogin: true,
     color: "#1a2f5a",
   },
+  {
+    id: "admin",
+    icon: "⚙",
+    titulo: "Configuración del Sistema",
+    desc: "Administración de usuarios, notarías, abogados y parámetros del sistema. Solo administradores.",
+    requiereLogin: true,
+    esAdmin: true,
+    color: "#2d2d2d",
+  },
 ];
  
  
@@ -192,19 +201,46 @@ function PerfilCard({ perfil, onSelect }) {
       onClick={() => onSelect(perfil)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ background: hovered ? perfil.color : "#ffffff", border: `1px solid ${hovered ? perfil.color : "#ddd"}`, borderLeft: `5px solid ${perfil.color}`, borderRadius: 4, padding: "28px 24px", cursor: "pointer", transition: "all 0.2s", boxShadow: hovered ? "0 6px 24px rgba(0,0,0,0.15)" : "0 1px 4px rgba(0,0,0,0.06)", transform: hovered ? "translateY(-3px)" : "none" }}
+      style={{
+        background: perfil.esAdmin ? (hovered ? "#1a1a1a" : "#2d2d2d") : (hovered ? perfil.color : "#ffffff"),
+        border: perfil.esAdmin ? `1px solid ${hovered ? "#555" : "#444"}` : `1px solid ${hovered ? perfil.color : "#ddd"}`,
+        borderLeft: `5px solid ${perfil.esAdmin ? (hovered ? "#b52240" : "#555") : perfil.color}`,
+        borderRadius: 4,
+        padding: perfil.esAdmin ? "20px 28px" : "28px 24px",
+        cursor: "pointer",
+        transition: "all 0.2s",
+        boxShadow: hovered ? "0 6px 24px rgba(0,0,0,0.2)" : "0 1px 4px rgba(0,0,0,0.06)",
+        transform: hovered ? "translateY(-3px)" : "none",
+        display: perfil.esAdmin ? "flex" : "block",
+        alignItems: perfil.esAdmin ? "center" : "initial",
+        gap: perfil.esAdmin ? 20 : 0,
+      }}
     >
-      <div style={{ fontSize: 36, marginBottom: 14 }}>{perfil.icon}</div>
-      <div style={{ fontSize: 18, fontWeight: 700, color: hovered ? "#ffffff" : "#1e1e1e", fontFamily: "Georgia, serif", marginBottom: 8 }}>{perfil.titulo}</div>
-      <div style={{ fontSize: 12, color: hovered ? "rgba(255,255,255,0.8)" : "#666", lineHeight: 1.7, fontFamily: "'Courier New', monospace", marginBottom: 16 }}>{perfil.desc}</div>
-      {perfil.requiereLogin && (
+      <div style={{ fontSize: perfil.esAdmin ? 28 : 36, marginBottom: perfil.esAdmin ? 0 : 14, flexShrink: 0 }}>{perfil.icon}</div>
+      <div style={{ flex: perfil.esAdmin ? 1 : "initial" }}>
+        <div style={{ fontSize: perfil.esAdmin ? 15 : 18, fontWeight: 700, color: perfil.esAdmin ? (hovered ? "#fff" : "#ccc") : (hovered ? "#ffffff" : "#1e1e1e"), fontFamily: "Georgia, serif", marginBottom: 6 }}>{perfil.titulo}</div>
+        <div style={{ fontSize: 12, color: perfil.esAdmin ? (hovered ? "rgba(255,255,255,0.7)" : "#888") : (hovered ? "rgba(255,255,255,0.8)" : "#666"), lineHeight: 1.7, fontFamily: "'Courier New', monospace", marginBottom: perfil.esAdmin ? 0 : 16 }}>{perfil.desc}</div>
+      </div>
+      {!perfil.esAdmin && perfil.requiereLogin && (
         <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: hovered ? "rgba(255,255,255,0.15)" : "rgba(139,26,46,0.08)", border: `1px solid ${hovered ? "rgba(255,255,255,0.3)" : "#8b1a2e"}`, borderRadius: 3, padding: "3px 10px", fontSize: 10, color: hovered ? "#fff" : "#8b1a2e", fontWeight: 700, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>
           🔒 REQUIERE LOGIN
         </div>
       )}
-      <div style={{ marginTop: perfil.requiereLogin ? 10 : 0, fontSize: 11, fontWeight: 700, color: hovered ? "rgba(255,255,255,0.9)" : perfil.color, letterSpacing: 1.5, fontFamily: "'Courier New', monospace" }}>
-        {hovered ? "INGRESAR →" : "SELECCIONAR →"}
-      </div>
+      {!perfil.esAdmin && (
+        <div style={{ marginTop: perfil.requiereLogin ? 10 : 0, fontSize: 11, fontWeight: 700, color: hovered ? "rgba(255,255,255,0.9)" : perfil.color, letterSpacing: 1.5, fontFamily: "'Courier New', monospace" }}>
+          {hovered ? "INGRESAR →" : "SELECCIONAR →"}
+        </div>
+      )}
+      {perfil.esAdmin && (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(181,34,64,0.2)", border: "1px solid #b52240", borderRadius: 3, padding: "3px 10px", fontSize: 10, color: "#b52240", fontWeight: 700, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>
+            🔑 SOLO ADMINISTRADORES
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: hovered ? "#fff" : "#888", letterSpacing: 1.5, fontFamily: "'Courier New', monospace" }}>
+            {hovered ? "ACCEDER →" : "CONFIGURACIÓN →"}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -227,8 +263,14 @@ export default function Home() {
  
   const handleLoginSuccess = (nombre) => {
     setShowLogin(false);
-    setPerfilActivo({ ...perfilPendiente, nombreUsuario: nombre });
+    const perfil = { ...perfilPendiente, nombreUsuario: nombre };
     setPerfilPendiente(null);
+    if (perfil.esAdmin) {
+      setPerfilActivo(perfil);
+      setCurrentModule("configuracion");
+    } else {
+      setPerfilActivo(perfil);
+    }
   };
  
   const handleLogout = () => {
@@ -290,8 +332,11 @@ export default function Home() {
  
         {/* Perfil cards */}
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 24px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginBottom: 40 }}>
-            {PERFILES.map(p => <PerfilCard key={p.id} perfil={p} onSelect={handlePerfilSelect} />)}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginBottom: 16 }}>
+            {PERFILES.filter(p => !p.esAdmin).map(p => <PerfilCard key={p.id} perfil={p} onSelect={handlePerfilSelect} />)}
+          </div>
+          <div style={{ marginBottom: 40 }}>
+            {PERFILES.filter(p => p.esAdmin).map(p => <PerfilCard key={p.id} perfil={p} onSelect={handlePerfilSelect} />)}
           </div>
           <div style={{ textAlign: "center", paddingTop: 24, borderTop: "1px solid #ddd" }}>
             <div style={{ fontSize: 11, color: "#888", letterSpacing: 2, fontFamily: "'Courier New', monospace" }}>© 2026 GRUPO GV · TODOS LOS DERECHOS RESERVADOS · CHILE</div>
