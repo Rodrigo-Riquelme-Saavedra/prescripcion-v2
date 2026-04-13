@@ -342,6 +342,186 @@ function AbogadosSection() {
   );
 }
  
+ 
+// ── USUARIOS ──────────────────────────────────────────────────────────────────
+const PERFILES_OPTS = [
+  { v: "abogado",  l: "\u2696 Abogados" },
+  { v: "cliente",  l: "\ud83d\udc64 Cliente / Usuario" },
+  { v: "notaria",  l: "\ud83d\udccb Notar\u00eda" },
+  { v: "estudio",  l: "\ud83c\udfdb Estudio Jur\u00eddico" },
+];
+ 
+const PERFIL_COLORS = {
+  abogado: "#8b1a2e", cliente: "#1a2f5a", notaria: "#8b1a2e", estudio: "#1a2f5a",
+};
+ 
+function UsuarioForm({ usuario, onSave, onCancel }) {
+  const [form, setForm] = useState(usuario);
+  const [showPass, setShowPass] = useState(false);
+  const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const isEdit = !!form.id;
+  return (
+    <Box>
+      <SectionTitle>{isEdit ? "Editar Usuario" : "Nuevo Usuario"}</SectionTitle>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase", fontFamily: "'Courier New', monospace" }}>Perfil</div>
+          <select value={form.perfil} onChange={e => set("perfil", e.target.value)}
+            style={{ width: "100%", background: "#fff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "9px 12px", color: C.text, fontFamily: "'Courier New', monospace", fontSize: 13 }}>
+            {PERFILES_OPTS.map(p => <option key={p.v} value={p.v}>{p.l}</option>)}
+          </select>
+        </div>
+        <Field label="Nombre completo" value={form.nombre} onChange={v => set("nombre", v)} placeholder="Juan P\u00e9rez" />
+        <Field label="Usuario (login)" value={form.usuario} onChange={v => set("usuario", v)} placeholder="juanperez" />
+        <div>
+          <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase", fontFamily: "'Courier New', monospace" }}>
+            {isEdit ? "Nueva contrase\u00f1a (vac\u00edo = no cambiar)" : "Contrase\u00f1a"}
+          </div>
+          <div style={{ position: "relative" }}>
+            <input type={showPass ? "text" : "password"} value={form.password || ""} onChange={e => set("password", e.target.value)}
+              placeholder={isEdit ? "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" : "m\u00ednimo 6 caracteres"}
+              style={{ width: "100%", background: "#fff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "9px 40px 9px 12px", color: C.text, fontFamily: "'Courier New', monospace", fontSize: 13, boxSizing: "border-box" }} />
+            <button onClick={() => setShowPass(!showPass)} style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: 14, color: C.muted }}>
+              {showPass ? "\ud83d\ude48" : "\ud83d\udc41"}
+            </button>
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase", fontFamily: "'Courier New', monospace" }}>Estado</div>
+          <select value={form.activo ? "true" : "false"} onChange={e => set("activo", e.target.value === "true")}
+            style={{ width: "100%", background: "#fff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "9px 12px", color: C.text, fontFamily: "'Courier New', monospace", fontSize: 13 }}>
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
+        <BtnSecondary onClick={onCancel}>Cancelar</BtnSecondary>
+        <BtnPrimary onClick={() => onSave(form)}>{isEdit ? "Guardar cambios" : "Crear usuario"}</BtnPrimary>
+      </div>
+    </Box>
+  );
+}
+ 
+function UsuarioCard({ usuario, onEdit, onDelete }) {
+  const [hovered, setHovered] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const color = PERFIL_COLORS[usuario.perfil] || "#555";
+  const perfilLabel = PERFILES_OPTS.find(p => p.v === usuario.perfil)?.l || usuario.perfil;
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => { setHovered(false); setConfirmDelete(false); }}
+      style={{ background: "#fff", border: `1px solid ${hovered ? color : "#ddd"}`, borderLeft: `4px solid ${color}`, borderRadius: 4, padding: "16px 18px", transition: "all 0.2s", boxShadow: hovered ? "0 4px 16px rgba(0,0,0,0.1)" : "0 1px 4px rgba(0,0,0,0.04)", display: "flex", alignItems: "center", gap: 14 }}>
+      <div style={{ width: 42, height: 42, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <span style={{ fontSize: 18, color: "#fff" }}>{PERFILES_OPTS.find(p => p.v === usuario.perfil)?.l?.split(" ")[0] || "?"}</span>
+      </div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "#1e1e1e", fontFamily: "Georgia, serif", marginBottom: 4 }}>{usuario.nombre || usuario.usuario}</div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 10, background: `${color}15`, border: `1px solid ${color}`, borderRadius: 3, padding: "1px 8px", color, fontWeight: 700, fontFamily: "'Courier New', monospace" }}>{perfilLabel}</span>
+          <span style={{ fontSize: 11, color: "#666", fontFamily: "'Courier New', monospace" }}>@{usuario.usuario}</span>
+          {!usuario.activo && <span style={{ fontSize: 10, background: "#fee2e2", border: "1px solid #c0392b", borderRadius: 3, padding: "1px 8px", color: "#c0392b", fontWeight: 700 }}>INACTIVO</span>}
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+        <button onClick={() => onEdit(usuario)} style={{ background: "rgba(139,26,46,0.08)", border: "1px solid #8b1a2e", borderRadius: 4, padding: "4px 12px", fontSize: 11, color: "#8b1a2e", cursor: "pointer", fontFamily: "inherit", fontWeight: 700 }}>Editar</button>
+        {!confirmDelete
+          ? <button onClick={() => setConfirmDelete(true)} style={{ background: "#fef2f2", border: "1px solid #c0392b", borderRadius: 4, padding: "4px 12px", fontSize: 11, color: "#c0392b", cursor: "pointer", fontFamily: "inherit", fontWeight: 700 }}>Eliminar</button>
+          : <button onClick={() => onDelete(usuario.id)} style={{ background: "#c0392b", border: "none", borderRadius: 4, padding: "4px 12px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: "inherit", fontWeight: 700 }}>Confirmar</button>
+        }
+      </div>
+    </div>
+  );
+}
+ 
+function UsuariosSection() {
+  const [usuarios, setUsuarios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editando, setEditando] = useState(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [perfilFiltro, setPerfilFiltro] = useState("Todos");
+  const [saved, setSaved] = useState("");
+  const [error, setError] = useState("");
+  const EMPTY_USER = { id: null, perfil: "abogado", nombre: "", usuario: "", password: "", activo: true };
+ 
+  useEffect(() => { cargar(); }, []);
+ 
+  const cargar = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/usuarios");
+      if (res.ok) { const data = await res.json(); setUsuarios(data.usuarios || []); }
+    } catch {} finally { setLoading(false); }
+  };
+ 
+  const handleSave = async (form) => {
+    setError("");
+    if (!form.nombre || !form.usuario) { setError("Nombre y usuario son obligatorios"); return; }
+    if (!form.id && !form.password) { setError("La contrase\u00f1a es obligatoria para nuevos usuarios"); return; }
+    if (form.password && form.password.length > 0 && form.password !== "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022" && form.password.length < 6) { setError("La contrase\u00f1a debe tener al menos 6 caracteres"); return; }
+    try {
+      const res = await fetch("/api/usuarios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error || "Error al guardar"); return; }
+      await cargar(); setShowForm(false); setEditando(null);
+      setSaved(form.id ? "Usuario actualizado correctamente" : "Usuario creado correctamente");
+      setTimeout(() => setSaved(""), 3000);
+    } catch { setError("Error de conexi\u00f3n"); }
+  };
+ 
+  const handleDelete = async (id) => {
+    try {
+      await fetch("/api/usuarios", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+      await cargar();
+    } catch {}
+  };
+ 
+  const filtrados = usuarios.filter(u => {
+    const mb = busqueda === "" || u.nombre?.toLowerCase().includes(busqueda.toLowerCase()) || u.usuario?.toLowerCase().includes(busqueda.toLowerCase());
+    const mp = perfilFiltro === "Todos" || u.perfil === perfilFiltro;
+    return mb && mp;
+  });
+ 
+  return (
+    <div>
+      {saved && <div style={{ background: "#f0fdf4", border: "1px solid #27ae60", borderRadius: 4, padding: "12px 16px", marginBottom: 16, color: "#27ae60", fontSize: 13, fontWeight: 700 }}>{saved}</div>}
+      {error && <div style={{ background: "#fef2f2", border: "1px solid #c0392b", borderRadius: 4, padding: "12px 16px", marginBottom: 16, color: "#c0392b", fontSize: 13 }}>{error}</div>}
+      {showForm && <UsuarioForm usuario={editando || EMPTY_USER} onSave={handleSave} onCancel={() => { setShowForm(false); setEditando(null); setError(""); }} />}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <div style={{ fontSize: 11, color: C.muted }}>{usuarios.filter(u => u.activo !== false).length} activos de {usuarios.length} usuarios</div>
+        {!showForm && <BtnPrimary onClick={() => { setEditando(null); setShowForm(true); setError(""); }}>+ Nuevo Usuario</BtnPrimary>}
+      </div>
+      <Box style={{ padding: "14px 20px", marginBottom: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase" }}>Buscar</div>
+            <input value={busqueda} onChange={e => setBusqueda(e.target.value)} placeholder="Nombre o usuario..."
+              style={{ width: "100%", background: "#fff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "8px 12px", color: C.text, fontFamily: "inherit", fontSize: 13, boxSizing: "border-box" }} />
+          </div>
+          <div>
+            <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, letterSpacing: 2, marginBottom: 5, textTransform: "uppercase" }}>Filtrar por perfil</div>
+            <select value={perfilFiltro} onChange={e => setPerfilFiltro(e.target.value)}
+              style={{ width: "100%", background: "#fff", border: `1px solid ${C.border}`, borderRadius: 4, padding: "8px 12px", color: C.text, fontFamily: "inherit", fontSize: 13 }}>
+              <option value="Todos">Todos los perfiles</option>
+              {PERFILES_OPTS.map(p => <option key={p.v} value={p.v}>{p.l}</option>)}
+            </select>
+          </div>
+        </div>
+      </Box>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px 0", color: C.muted }}><div style={{ fontSize: 32, marginBottom: 12 }}>...</div><div>Cargando usuarios...</div></div>
+      ) : filtrados.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "40px 0", color: C.muted }}><div style={{ fontSize: 40, marginBottom: 12 }}>?</div><div style={{ fontSize: 14, fontWeight: 700 }}>Sin resultados</div></div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {filtrados.map(u => <UsuarioCard key={u.id} usuario={u} onEdit={(u) => { setEditando({ ...u, password: "" }); setShowForm(true); }} onDelete={handleDelete} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+ 
+ 
 // ── MÓDULO PRINCIPAL ──────────────────────────────────────────────────────────
 export default function ConfiguracionModule({ onBack }) {
   const [seccion, setSeccion] = useState("notarias");
@@ -356,9 +536,10 @@ export default function ConfiguracionModule({ onBack }) {
           {[
             { id: "notarias", icon: "📋", label: "Notarías" },
             { id: "abogados", icon: "👥", label: "Abogados y Bufetes" },
-          ].map(tab => (
+            { id: "usuarios", icon: "🔑", label: "Usuarios del Sistema" },
+          ].map((tab, idx) => (
             <button key={tab.id} onClick={() => setSeccion(tab.id)}
-              style={{ flex: 1, padding: "14px 0", background: seccion === tab.id ? "#1e1e1e" : "#ffffff", border: "none", borderRight: tab.id === "notarias" ? "1px solid #ddd" : "none", color: seccion === tab.id ? "#ffffff" : "#555", fontFamily: "'Courier New', monospace", fontSize: 13, fontWeight: 700, letterSpacing: 1, cursor: "pointer", transition: "all 0.2s" }}>
+              style={{ flex: 1, padding: "14px 0", background: seccion === tab.id ? "#1e1e1e" : "#ffffff", border: "none", borderRight: idx < 2 ? "1px solid #ddd" : "none", color: seccion === tab.id ? "#ffffff" : "#555", fontFamily: "'Courier New', monospace", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: "pointer", transition: "all 0.2s" }}>
               {tab.icon} {tab.label}
               {seccion === tab.id && <div style={{ width: 30, height: 2, background: "#b52240", margin: "4px auto 0" }} />}
             </button>
@@ -367,6 +548,7 @@ export default function ConfiguracionModule({ onBack }) {
  
         {seccion === "notarias" && <NotariasSection />}
         {seccion === "abogados" && <AbogadosSection />}
+        {seccion === "usuarios" && <UsuariosSection />}
       </div>
     </div>
   );
