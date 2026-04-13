@@ -175,34 +175,6 @@ const PERFILES = [
   },
 ];
  
-const COURT_SVG = `<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;opacity:0.45">
-  <rect x="350" y="50" width="100" height="18" fill="#ffffff" rx="2"/>
-  <polygon points="400,15 310,70 490,70" fill="#ffffff"/>
-  <rect x="370" y="25" width="60" height="7" fill="#e05070" rx="1"/>
-  <rect x="75" y="70" width="650" height="12" fill="#ffffff" rx="2"/>
-  <rect x="95" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="135" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="195" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="235" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="295" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="335" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="450" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="490" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="550" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="590" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="650" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="690" y="82" width="15" height="200" fill="#dddddd" rx="2"/>
-  <rect x="350" y="120" width="100" height="162" fill="#cccccc" rx="2"/>
-  <rect x="362" y="132" width="32" height="48" fill="#555555" rx="1"/>
-  <rect x="406" y="132" width="32" height="48" fill="#555555" rx="1"/>
-  <rect x="362" y="192" width="76" height="90" fill="#555555" rx="1"/>
-  <rect x="75" y="282" width="650" height="14" fill="#ffffff" rx="2"/>
-  <rect x="55" y="296" width="690" height="10" fill="#dddddd" rx="2"/>
-  <line x1="200" y1="148" x2="200" y2="190" stroke="#f0c060" stroke-width="2"/>
-  <line x1="178" y1="160" x2="222" y2="160" stroke="#f0c060" stroke-width="2"/>
-  <ellipse cx="188" cy="168" rx="9" ry="5" fill="none" stroke="#f0c060" stroke-width="1.5"/>
-  <ellipse cx="212" cy="168" rx="9" ry="5" fill="none" stroke="#f0c060" stroke-width="1.5"/>
-</svg>`;
  
 function PerfilCard({ perfil, onSelect }) {
   const [hovered, setHovered] = useState(false);
