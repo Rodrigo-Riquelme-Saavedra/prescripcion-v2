@@ -84,16 +84,25 @@ function LoginModal({ perfil, onSuccess, onCancel }) {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
  
-  const CREDS = {
-    "abogado":  [{ u: "abogado",  p: "gv2026" }],
-    "notaria":  [{ u: "notaria",  p: "gv2026" }],
-  };
- 
-  const handleLogin = () => {
-    const valid = (CREDS[perfil] || []).find(c => c.u === user && c.p === pass);
-    if (valid) { onSuccess(); }
-    else { setError("Usuario o contraseña incorrectos"); }
+  const handleLogin = async () => {
+    if (!user || !pass) { setError("Ingresa usuario y contraseña"); return; }
+    setLoading(true); setError("");
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ perfil, usuario: user, password: pass }),
+      });
+      const data = await res.json();
+      if (data.ok) { onSuccess(data.nombre || user); }
+      else { setError(data.error || "Usuario o contraseña incorrectos"); }
+    } catch {
+      setError("Error de conexión. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
  
   const iconos = { abogado: "⚖", notaria: "📋" };
@@ -132,7 +141,7 @@ function LoginModal({ perfil, onSuccess, onCancel }) {
         )}
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={onCancel} style={{ flex: 1, background: "#f4f4f4", border: "1px solid #ddd", color: "#555", borderRadius: 4, padding: "10px", fontFamily: "inherit", fontSize: 12, cursor: "pointer" }}>Cancelar</button>
-          <button onClick={handleLogin} style={{ flex: 2, background: "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: "#fff", borderRadius: 4, padding: "10px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: "pointer" }}>INGRESAR →</button>
+          <button onClick={handleLogin} disabled={loading} style={{ flex: 2, background: loading ? "#888" : "linear-gradient(135deg, #8b1a2e, #b52240)", border: "none", color: "#fff", borderRadius: 4, padding: "10px", fontFamily: "inherit", fontSize: 12, fontWeight: 700, letterSpacing: 1, cursor: loading ? "wait" : "pointer" }}>{loading ? "VERIFICANDO..." : "INGRESAR →"}</button>
         </div>
       </div>
     </div>
@@ -154,7 +163,7 @@ const PERFILES = [
     icon: "👤",
     titulo: "Cliente / Usuario",
     desc: "Consulta de documentos, seguimiento de expedientes y gestión de información personal.",
-    requiereLogin: false,
+    requiereLogin: true,
     color: "#1a2f5a",
   },
   {
@@ -170,7 +179,7 @@ const PERFILES = [
     icon: "🏛",
     titulo: "Estudio Jurídico",
     desc: "Administración del estudio, bufete de abogados, reportes y configuración del sistema.",
-    requiereLogin: false,
+    requiereLogin: true,
     color: "#1a2f5a",
   },
 ];
@@ -216,9 +225,9 @@ export default function Home() {
     }
   };
  
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (nombre) => {
     setShowLogin(false);
-    setPerfilActivo(perfilPendiente);
+    setPerfilActivo({ ...perfilPendiente, nombreUsuario: nombre });
     setPerfilPendiente(null);
   };
  
@@ -307,7 +316,10 @@ export default function Home() {
         {/* Perfil badge */}
         <div style={{ marginLeft: 20, background: "rgba(139,26,46,0.15)", border: "1px solid #8b1a2e", borderRadius: 4, padding: "4px 14px", display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ fontSize: 14 }}>{perfilActivo.icon}</span>
-          <span style={{ fontSize: 11, color: "#b52240", fontWeight: 700, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>{perfilActivo.titulo.toUpperCase()}</span>
+          <div>
+            <div style={{ fontSize: 11, color: "#b52240", fontWeight: 700, letterSpacing: 1, fontFamily: "'Courier New', monospace" }}>{perfilActivo.titulo.toUpperCase()}</div>
+            {perfilActivo.nombreUsuario && <div style={{ fontSize: 9, color: "#888", fontFamily: "'Courier New', monospace" }}>{perfilActivo.nombreUsuario}</div>}
+          </div>
         </div>
         <button onClick={handleLogout} style={{ marginLeft: "auto", background: "transparent", border: "1px solid #555", color: "#999", borderRadius: 4, padding: "4px 14px", fontSize: 10, fontFamily: "'Courier New', monospace", cursor: "pointer", letterSpacing: 1 }}>
           ← CAMBIAR PERFIL
